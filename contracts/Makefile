@@ -4,27 +4,28 @@ ligo_compiler=docker run --rm -v "$(PWD)":"$(PWD)" -w "$(PWD)" ligolang/ligo:sta
 protocol_opt=
 JSON_OPT=--michelson-format json
 tsc=npx tsc
+
 help:
 	@echo  'Usage:'
 	@echo  '  all             - Remove generated Michelson files, recompile smart contracts and lauch all tests'
 	@echo  '  clean           - Remove generated Michelson files'
-	@echo  '  compile         - Compiles smart contract Shifumi'
+	@echo  '  compile         - Compiles smart contract'
 	@echo  '  test            - Run integration tests (written in Ligo)'
-	@echo  '  deploy          - Deploy smart contract Shifumi (typescript using Taquito)'
+	@echo  '  deploy          - Deploy smart contract (typescript using Taquito)'
 	@echo  ''
 
 all: clean compile test
 
-compile: shifumi
+compile: contract
 
-shifumi: shifumi.tz shifumi.json
+contract: contract.tz contract.json
 
-shifumi.tz: src/main.jsligo
+contract.tz: src/main.jsligo
 	@echo "Compiling smart contract to Michelson"
 	@mkdir -p compiled
 	@$(ligo_compiler) compile contract $^ -e main $(protocol_opt) > compiled/$@
 
-shifumi.json: src/main.jsligo
+contract.json: src/main.jsligo
 	@echo "Compiling smart contract to Michelson in JSON format"
 	@mkdir -p compiled
 	@$(ligo_compiler) compile contract $^ $(JSON_OPT) -e main $(protocol_opt) > compiled/$@
@@ -51,8 +52,9 @@ node_modules:
 	@cd deploy && npm install
 	@echo ""
 
-
 metadata.json:
 	@echo "Generate metadata.json"
 	@if [ ! -f ./deploy/metadata.json ]; then cp deploy/metadata.json.dist \
         deploy/metadata.json ; fi
+
+.PHONY: all clean compile contract test test_ligo deploy node_modules

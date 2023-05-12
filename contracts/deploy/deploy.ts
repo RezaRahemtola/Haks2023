@@ -4,7 +4,7 @@ import { buf2hex } from "@taquito/utils";
 import chalk from "chalk";
 import { Spinner } from "cli-spinner";
 import * as dotenv from "dotenv";
-import code from "../compiled/shifumi.json";
+import code from "../compiled/contract.json";
 import metadata from "./metadata.json";
 
 dotenv.config({ path: __dirname + "/.env" });
