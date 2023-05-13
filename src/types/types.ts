@@ -16,4 +16,5 @@ type Donator = MichelsonMap<string, number>;
 export type StorageData = {
 	associations: MichelsonMap<string, Association>;
 	donators: MichelsonMap<string, Donator>;
+	totalStaked: number;
 };

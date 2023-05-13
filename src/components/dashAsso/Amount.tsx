@@ -1,12 +1,15 @@
 import Button from "@/src/components/Button";
+import { useDappContext } from "@/src/contexts/dapp";
+import getBalanceAssociation from "@/src/utils/getBalanceAssociation";
 import { Text, VStack } from '@chakra-ui/react';
 
 const AmountWithdraw = () => {
-  const value = 53.2;
   const dollarValue = 47.56;
+  const { storage } = useDappContext();
+	const value = getBalanceAssociation(storage);
 
     return ( <VStack>
-              <Text fontSize="50px">{value} <Text as='u'>XTZ</Text></Text>
+              <Text fontSize="50px">{value.toString()} <Text as='u'>XTZ</Text></Text>
               <Button
                 variant="special"
                 size="xl"
