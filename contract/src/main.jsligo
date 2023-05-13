@@ -1,48 +1,99 @@
-type Association = {
+type association = {
   claimable: tez,
   stakedAmount: tez,
   name: string,
 };
 
 type storage = {
-  donators: map<address, map<address, tez>>,
-  associations: map<address, Association>,
+  donators: big_map<address, map<address, tez>>,
+  associations: map<address, association>,
   totalFees: tez,
   totalStaked: tez,
   feePercentage: nat,
-  feeAddress: address,
-  bakerAddress: address,
+  baker: key_hash,
+  ownerAddress: address,
 };
 
-type empty_param = {
-  empty: int;
+type register_asso_param = {
+  name: string,
 };
 
-type parameter = ["Empty1", empty_param] | ["Empty2", empty_param];
+type change_owner_param = {
+  ownerAddress: address,
+}
+
+type change_baker_param = {
+  baker: key_hash,
+};
+
+type parameter = 
+  ["RegisterAsAssociation", register_asso_param]
+| ["ChangeOwner", change_owner_param]
+| ["ChangeBaker", change_baker_param]
+| ["ClaimFees"];
 
 type return_ = [list<operation>, storage];
 
-const empty = (_params: empty_param, store: storage): return_ => {
+const already_registered = "This address is already registered as an association";
+const already_registered_donator = "This address is already registered as a donator. Please use another address to register your association";
+const not_owner = "You are not the owner of the contract";
+const already_owner = "You are already the owner of the contract";
+const already_baker = "This address is already set as the baker";
+const invalid_address = "Invalid address";
+const no_fees = "There are no fees to claim";
+
+const burn_address = "tz1burnburnburnburnburnburnburjAYjjX" as address;
+
+const registerAsAssociation = (params: register_asso_param, store: storage): return_ => {
+  assert_none_with_error(Map.find_opt(Tezos.get_sender(), store.associations), already_registered);
+  assert_none_with_error(Map.find_opt(Tezos.get_sender(), store.associations), already_registered_donator);
+
   return [
-    list([]), {...store}
+    list([]), {...store, 
+      associations: Map.add(Tezos.get_sender(), {
+        claimable: 0 as tez,
+        stakedAmount: 0 as tez,
+        name: params.name
+      }, store.associations)
+    }
   ];
-};
+}
+
+const claimFees = (store: storage) => {
+  assert_with_error(Tezos.get_sender() == store.ownerAddress, not_owner);
+  assert_with_error(store.totalFees > (0 as tez), no_fees);
+
+  return [
+    list([]), {...store, totalFees: 0 as tez}
+  ];
+}
+
+const changeOwner = (params: change_owner_param, store: storage): return_ => {
+  assert_with_error(Tezos.get_sender() == store.ownerAddress, not_owner);
+  assert_with_error(params.ownerAddress != store.ownerAddress, already_owner);
+  assert_with_error(params.ownerAddress != burn_address, invalid_address);
+
+  return [
+    list([]), {...store, ownerAddress: params.ownerAddress}
+  ];
+}
+
+const changeBaker = (params: change_baker_param, store: storage): return_ => {
+  assert_with_error(Tezos.get_sender() == store.ownerAddress, not_owner);
+  assert_with_error(params.baker != store.baker, already_owner);
+
+  return [
+    list([
+      Tezos.set_delegate(Some(params.baker))
+    ]), {...store, baker: params.baker}
+  ];
+}
 
 const main = (action: parameter, store: storage) : return_ => {
   return match (action, {
-        Empty1: (p: empty_param) => empty(p, store),
-        Empty2: (p: empty_param) => empty(p, store)
+        RegisterAsAssociation: (p: register_asso_param) => registerAsAssociation(p, store),
+        ChangeOwner: (p: change_owner_param) => changeOwner(p, store),
+        ChangeBaker: (p: change_baker_param) => changeBaker(p, store),
+        ClaimFees: () => claimFees(store),
     });
 };
-
-
-
-// type storage = {
-//   donators: Map.empty,
-//   associations: Map.empty,,
-//   totalFees: 0,
-//   totalStaked: 0,
-//   feePercentage: 0,
-//   feeAddress: 0,
-//   bakerAddress: 0,
-// };

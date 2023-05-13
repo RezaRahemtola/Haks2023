@@ -7,7 +7,9 @@ protocol_opt=
 contract_name=haks
 wallet_name=alice
 contract_michelson=compiled/contract.tz
-contract_storage=$(shell cat storage.txt)
+contract_storage=$(shell cat storage/storage.out)
+contract_storage_gen=$(shell cat storage/storage.txt)
+baker=tz1RuHDSj9P7mNNhfKxsyLGRDahTX5QD1DdP
 
 all: clean compile
 
@@ -29,11 +31,14 @@ clean:
 	@echo "Removing Michelson file"
 	@rm -rf compiled/*.tz
 
+deploy: storage
+	octez-client originate contract ${contract_name} transferring 0 from ${wallet_name} running ${contract_michelson} --init '${contract_storage}' --delegate ${baker} --burn-cap 1 --force
+
+storage:
+	ligo compile storage src/main.jsligo '${contract_storage_gen}' > storage/storage.out
+
 test: test/test.mligo
 	@echo "Running integration tests"
 	@$(ligo_compiler) run test $^ $(protocol_opt)
 
-deploy:
-	octez-client originate contract ${contract_name} transferring 0 from ${wallet_name} running ${contract_michelson} --init '${contract_storage}' --burn-cap 1 --force
-
-.PHONY: all help compile clean test deploy
+.PHONY: all clean compile deploy help storage test
