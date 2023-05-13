@@ -1,7 +1,7 @@
 import { Box, Img, Stack, Text, useBreakpointValue, useColorMode, useColorModeValue, VStack } from "@chakra-ui/react";
 
-import colors from "@/src/theme/foundations/colors";
 import { textColorMode } from "@/src/config/colorMode";
+import colors from "@/src/theme/foundations/colors";
 
 const ServicesCard = ({
 	title,
@@ -65,27 +65,27 @@ const ServicesSection = (): JSX.Element => {
 				id="ipc-landing-services-title"
 				color={textColor}
 			>
-				Inter Planetary Cloud offers{" "}
+				Our project is {" "}
 				<Box
 					as="span"
 					bgGradient={`linear-gradient(135deg, ${colors.blue[900]} 0%, ${colors.red[900]} 100%)`}
 					bgClip="text"
 				>
-					two services
+					Winner - Winner
 				</Box>
 			</Text>
 			<Stack direction={{ base: "column", lg: "row" }} spacing="48px" zIndex={10}>
 				<ServicesCard
-					title="Cloud Storage"
-					description="A distributed personal file storage and management system platform, protecting your data."
-					icon="/assets/icons/cloud-storage-logo.svg"
+					title="Donors"
+					description="Donors don't lose purchasing power when donating to charities"
+					icon="/assets/icons/people.svg"
 					position="left"
 					id="ipc-landing-services-cloud-storage"
 				/>
 				<ServicesCard
-					title="Cloud Computing"
-					description="A distributed personal cloud computing platform for HTTP servers."
-					icon="/assets/icons/cloud-computing-logo.svg"
+					title="Charities"
+					description="Charities become more attractive to donors"
+					icon="/assets/icons/solidarity.svg"
 					position="right"
 					id="ipc-landing-services-cloud-computing"
 				/>

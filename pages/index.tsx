@@ -1,6 +1,5 @@
 import { VStack } from "@chakra-ui/react";
 
-import FeaturesSection from "@/src/components/landingPage/FeaturesSection";
 import Footer from "@/src/components/landingPage/Footer";
 import HeadingSection from "@/src/components/landingPage/HeadingSection";
 import NavBar from "@/src/components/landingPage/NavBar";
@@ -14,7 +13,6 @@ const Home = () => (
 		<VStack w="100%" spacing={{ base: "96px", lg: "128px" }}>
 			<PartnersSection />
 			<ServicesSection />
-			<FeaturesSection />
 		</VStack>
 		<Footer />
 	</VStack>
