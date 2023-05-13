@@ -1,1 +1,1 @@
-{donators: Big_map.empty, associations: Map.empty, totalFees: 0 as tez, totalStaked: 0 as tez, feePercentage: 0 as nat,ownerAddress: "tz1h4eqwaDsJCqTP34DZycTdVycNbawYWM3R" as address, baker: "tz1RuHDSj9P7mNNhfKxsyLGRDahTX5QD1DdP" as key_hash}
+{donators: Big_map.empty, associations: Map.empty, totalStaked: 0 as tez, feePercentage: 0 as nat,ownerAddress: "tz1h4eqwaDsJCqTP34DZycTdVycNbawYWM3R" as address, baker: "tz1RuHDSj9P7mNNhfKxsyLGRDahTX5QD1DdP" as key_hash}

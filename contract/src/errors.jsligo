@@ -1,0 +1,13 @@
+export const already_registered = "This address is already registered as an association";
+export const already_registered_donator = "This address is already registered as a donator";
+export const not_donator = "Associations cannot perform stake operations.";
+export const not_association = "This address is not registered as an association";
+
+export const invalid_address = "Invalid address";
+export const no_fees = "There are no fees to claim";
+export const no_token = "The transaction is empty";
+export const unneeded_token = "The transaction must be empty";
+
+export const not_owner = "You are not the owner of the contract";
+export const already_owner = "You are already the owner of the contract";
+export const already_baker = "This address is already set as the baker";
