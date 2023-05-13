@@ -51,7 +51,7 @@ const ConnectButton = ({ setConnected, wallet, setUserAddress }: ButtonProps) =>
 
 	if (connected) {
 		return (
-			<>
+			<>Connect
 				<Popover>
 					<PopoverTrigger>
 						<Button variant="secondary" buttonType="left-icon" icon={FaWallet} isTruncated>
