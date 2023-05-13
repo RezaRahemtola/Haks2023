@@ -1,19 +1,48 @@
-type storage = int;
+type Association = {
+  claimable: tez,
+  stakedAmount: tez,
+  name: string,
+};
 
-type parameter =
-  ["Increment", int]
-| ["Decrement", int]
-| ["Reset"];
+type storage = {
+  donators: map<address, map<address, tez>>,
+  associations: map<address, Association>,
+  totalFees: tez,
+  totalStaked: tez,
+  feePercentage: nat,
+  feeAddress: address,
+  bakerAddress: address,
+};
+
+type empty_param = {
+  empty: int;
+};
+
+type parameter = ["Empty1", empty_param] | ["Empty2", empty_param];
 
 type return_ = [list<operation>, storage];
 
-const main = (action: parameter, store: storage) : return_ => {
+const empty = (_params: empty_param, store: storage): return_ => {
   return [
-    list([]),
-    match(action, {
-      Increment: n => store + n,
-      Decrement: n => store - n,
-      Reset:     ()       => 0
-    })
+    list([]), {...store}
   ];
 };
+
+const main = (action: parameter, store: storage) : return_ => {
+  return match (action, {
+        Empty1: (p: empty_param) => empty(p, store),
+        Empty2: (p: empty_param) => empty(p, store)
+    });
+};
+
+
+
+// type storage = {
+//   donators: Map.empty,
+//   associations: Map.empty,,
+//   totalFees: 0,
+//   totalStaked: 0,
+//   feePercentage: 0,
+//   feeAddress: 0,
+//   bakerAddress: 0,
+// };
