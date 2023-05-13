@@ -7,12 +7,12 @@ import StackTable from "@/src/components/dashDonnor/StackTable";
 import { FrontAssociation } from "@/src/types/types";
 
 const ListStack = () => {
-	const { storage, address } = useDappContext();
+	const { storage, address, Tezos } = useDappContext();
 	const [values, setValues] = useState<FrontAssociation[] | undefined>();
 
 	useEffect(() => {
 		(async () => {
-			setValues(await getDonatorSupportedAssociations(storage, address));
+			setValues(await getDonatorSupportedAssociations(storage, address, Tezos));
 		})();
 	}, []);
 

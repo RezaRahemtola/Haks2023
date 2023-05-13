@@ -2,6 +2,7 @@ import {
 	FormControl,
 	FormLabel,
 	Input,
+	Link,
 	Table,
 	TableContainer,
 	Tbody,
@@ -30,12 +31,11 @@ type StackTableProps = {
 const HandleSupport = ({ association }: { association: FrontAssociation }) => {
 	const toast = useToast({ duration: 2000, isClosable: true });
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { contract } = useDappContext();
+	const { contract, Tezos } = useDappContext();
 	const [amount, setAmount] = useState(0);
-	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmitSupport = async () => {
-		await supportAssociation(association, amount, contract);
+		await supportAssociation(association, amount, Tezos);
 		onClose();
 		toast({ title: `Successfully delegating ${amount} XTZ to ${association?.name}`, status: "success" });
 	};
@@ -50,7 +50,7 @@ const HandleSupport = ({ association }: { association: FrontAssociation }) => {
 				onClose={onClose}
 				title="Support charity"
 				CTA={
-					<Button variant="primary" size="lg" onClick={handleSubmitSupport} isLoading={isLoading}>
+					<Button variant="primary" size="lg" onClick={handleSubmitSupport}>
 						OK
 					</Button>
 				}
@@ -85,8 +85,15 @@ const Content = ({ values, isSupport, isWithdraw }: StackTableProps) => (
 					{values.map((association, index) => (
 						<Tr key={index}>
 							<Td>
-								<Text>{association.name}</Text>
-								<Text>{association.address}</Text>
+								<Text size="xl">{association.name}</Text>
+								<Link href={`https://tzprofiles.com/view/ghostnet/${association.address}`} isExternal>
+									{association.address}
+								</Link>
+								{association.stackedAmount !== undefined ? (
+									<Text size="l">{association.stackedAmount} XTZ stacked</Text>
+								) : (
+									<></>
+								)}
 							</Td>
 							<Td isNumeric>
 								{isSupport ? (

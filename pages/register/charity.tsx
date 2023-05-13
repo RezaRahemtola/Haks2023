@@ -2,7 +2,17 @@ import Button from "@/src/components/Button";
 import Modal from "@/src/components/Modal";
 import { textColorMode } from "@/src/config/colorMode";
 import { useDappContext } from "@/src/contexts/dapp";
-import { Box, FormControl, FormLabel, Input, Text, useBreakpointValue, useColorModeValue, useDisclosure, VStack } from "@chakra-ui/react";
+import {
+	Box,
+	FormControl,
+	FormLabel,
+	Input,
+	Text,
+	useBreakpointValue,
+	useColorModeValue,
+	useDisclosure,
+	VStack,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 
@@ -13,26 +23,30 @@ const ConnectionCharity = (): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [isLoading] = useState(false);
 	const charityName = "";
-	const [name, setName] = useState('');
+	const [name, setName] = useState("");
 	const { contract } = useDappContext();
 
 	const onRegister = async () => {
 		try {
-			const result = await contract.methods.registerAsAssociation(name).send();
+			const result = await contract.methods.registerAssociation(name).send();
 			const confirmation = await result.confirmation(1);
-			if (confirmation)
-				console.log("Operation hash:", confirmation);
 		} catch (e) {
 			console.error("Error: ", e);
 		}
 	};
 
-    return (
-        <VStack spacing={{ base: "24px", md: "50px" }}>
-			<VStack h={"5rem" } >
-				<Text style={{cursor: "pointer"}} size="2xl" variant="gradient" id="haks2023-landing-navigation-name" onClick={() => {
-					router.push("/");
-				}}>
+	return (
+		<VStack spacing={{ base: "24px", md: "50px" }}>
+			<VStack h={"5rem"}>
+				<Text
+					style={{ cursor: "pointer" }}
+					size="2xl"
+					variant="gradient"
+					id="haks2023-landing-navigation-name"
+					onClick={() => {
+						router.push("/");
+					}}
+				>
 					HAKS 2023
 				</Text>
 			</VStack>
@@ -42,44 +56,37 @@ const ConnectionCharity = (): JSX.Element => {
 				</Text>
 			</VStack>
 			<Text size="2xl" maxW="800px" color={textColor} align={"center"}>
-
-				Join the movement for a brighter future.{" "}
-                    <br />
-					Register your association
-			    	<Box as="span" fontWeight="700">
-                        {" "}  power of blockchain
-			    	</Box>{" "}
-                    to support your cause.
-			    </Text>
-				<VStack spacing={"1rem"}></VStack>
-				<VStack spacing={{ base: "24px", md: "50px" }}>
+				Join the movement for a brighter future. <br />
+				Register your association
+				<Box as="span" fontWeight="700">
+					{" "}
+					power of blockchain
+				</Box>{" "}
+				to support your cause.
+			</Text>
+			<VStack spacing={"1rem"}></VStack>
+			<VStack spacing={{ base: "24px", md: "50px" }}>
+				<Button width="500px" variant="special" size={isMobile ? "xl" : "2xl"} buttonType="left-icon" onClick={onOpen}>
+					Enter your name
+				</Button>
+			</VStack>
+			<Modal
+				isOpen={isOpen}
+				onClose={onClose}
+				title="Enter the charity name"
+				CTA={
 					<Button
-						width="500px"
-			    		variant="special"
-			    		size={isMobile ? "xl" : "2xl"}
-			    		buttonType="left-icon"
-						onClick={onOpen}
-			    	    >
-			    		Enter your name
-			    	</Button>
-				</VStack>
-				<Modal
-					isOpen={isOpen}
-					onClose={onClose}
-					title="Enter the charity name"
-					CTA= {
-						<Button
-							variant="primary"
-							size="lg"
-							isLoading={isLoading}
-							id="Haks2023-dashboard-update-programName-button"
-							onClick={onRegister}
-						>
-							OK
-						</Button>
-					}
+						variant="primary"
+						size="lg"
+						isLoading={isLoading}
+						id="Haks2023-dashboard-update-programName-button"
+						onClick={onRegister}
 					>
-					<FormControl>
+						OK
+					</Button>
+				}
+			>
+				<FormControl>
 					<FormLabel color={textColor}>Charity name</FormLabel>
 					<Input
 						type="text"
@@ -91,9 +98,9 @@ const ConnectionCharity = (): JSX.Element => {
 						id="hakers2023-dashboard-input-update-programame"
 					/>
 				</FormControl>
-				</Modal>
-        </VStack>
-    );
+			</Modal>
+		</VStack>
+	);
 };
 
 export default ConnectionCharity;

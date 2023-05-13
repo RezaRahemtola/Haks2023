@@ -1,8 +1,9 @@
 import { FrontAssociation } from "@/src/types/types";
-import { WalletContract } from "@taquito/taquito";
+import { TezosToolkit } from "@taquito/taquito";
 
-const supportAssociation = async (association: FrontAssociation, amount: number, contract: WalletContract) => {
+const supportAssociation = async (association: FrontAssociation, amount: number, Tezos: TezosToolkit) => {
 	try {
+		const contract = await Tezos.wallet.at(association.contract);
 		const op = await contract.methods.offerStake(association.address).send({ amount });
 		await op.confirmation();
 	} catch (error) {
