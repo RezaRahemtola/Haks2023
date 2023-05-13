@@ -13,7 +13,7 @@ const NavBar = () => {
 
 	return (
 		<>
-			<HStack justify="space-between" w={{ base: "300px", lg: "750px", "2xl": "1000px" }}>
+			<HStack justify="space-between" w={{ base: "500px", lg: "750px", "2xl": "1000px" }}>
 				<Text style={{cursor: "pointer"}} onClick={() => {
 						router.push("/");
 					}} size="2xl" variant="gradient" id="ipc-landing-navigation-name">
@@ -32,7 +32,7 @@ const NavBar = () => {
 				>
 					Start
 				</Button>
-				<WalletButton wallet={wallet} setConnected={setConnected} setUserAddress={setAddress} />
+			<WalletButton wallet={wallet} setConnected={setConnected} setUserAddress={setAddress} />
 			</HStack>
 		</>
 	);
