@@ -11,6 +11,7 @@ import {
 	Thead,
 	Tr,
 	useDisclosure,
+	useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -26,68 +27,30 @@ type StackTableProps = {
 	isWithdraw?: boolean;
 };
 
-const Content = ({ values, isSupport, isWithdraw }: StackTableProps) => {
-	const { contract } = useDappContext();
+const HandleSupport = ({ association }: { association: FrontAssociation }) => {
+	const toast = useToast({ duration: 2000, isClosable: true });
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { contract } = useDappContext();
 	const [amount, setAmount] = useState(0);
-	const [selectedAssociation, setSelectedAssociation] = useState<FrontAssociation | undefined>();
+	const [isLoading, setIsLoading] = useState(false);
 
-	const handleSupport = (association: FrontAssociation) => {
-		setSelectedAssociation(association);
-		onOpen();
+	const handleSubmitSupport = async () => {
+		await supportAssociation(association, amount, contract);
+		onClose();
+		toast({ title: `Successfully delegating ${amount} XTZ to ${association?.name}`, status: "success" });
 	};
 
 	return (
 		<>
-			<TableContainer width={700} mt={10}>
-				<Table variant="simple">
-					<Thead>
-						<Tr>
-							<Th>Name</Th>
-							<Th isNumeric></Th>
-						</Tr>
-					</Thead>
-					<Tbody>
-						{values.map((association, index) => (
-							<Tr key={index}>
-								<Td>
-									<Text>{association.name}</Text>
-									<Text>{association.address}</Text>
-								</Td>
-								<Td isNumeric>
-									{isSupport ? (
-										<Button
-											variant="special"
-											size="xl"
-											buttonType="left-icon"
-											onClick={() => handleSupport(association)}
-										>
-											Support
-										</Button>
-									) : isWithdraw ? (
-										<Button variant="special" size="xl" buttonType="left-icon">
-											Withdraw
-										</Button>
-									) : (
-										<></>
-									)}
-								</Td>
-							</Tr>
-						))}
-					</Tbody>
-				</Table>
-			</TableContainer>
+			<Button variant="special" size="xl" buttonType="left-icon" onClick={onOpen}>
+				Support
+			</Button>
 			<Modal
 				isOpen={isOpen}
 				onClose={onClose}
-				title="Support association"
+				title="Support charity"
 				CTA={
-					<Button
-						variant="primary"
-						size="lg"
-						onClick={() => supportAssociation(selectedAssociation as FrontAssociation, amount, contract)}
-						// isLoading={isLoading}
-					>
+					<Button variant="primary" size="lg" onClick={handleSubmitSupport} isLoading={isLoading}>
 						OK
 					</Button>
 				}
@@ -107,6 +70,42 @@ const Content = ({ values, isSupport, isWithdraw }: StackTableProps) => {
 		</>
 	);
 };
+
+const Content = ({ values, isSupport, isWithdraw }: StackTableProps) => (
+	<>
+		<TableContainer width={700} mt={10}>
+			<Table variant="simple">
+				<Thead>
+					<Tr>
+						<Th>Name</Th>
+						<Th isNumeric></Th>
+					</Tr>
+				</Thead>
+				<Tbody>
+					{values.map((association, index) => (
+						<Tr key={index}>
+							<Td>
+								<Text>{association.name}</Text>
+								<Text>{association.address}</Text>
+							</Td>
+							<Td isNumeric>
+								{isSupport ? (
+									<HandleSupport association={association} />
+								) : isWithdraw ? (
+									<Button variant="special" size="xl" buttonType="left-icon">
+										Withdraw
+									</Button>
+								) : (
+									<></>
+								)}
+							</Td>
+						</Tr>
+					))}
+				</Tbody>
+			</Table>
+		</TableContainer>
+	</>
+);
 
 const NoContent = () => (
 	<Text mt={10} size="1xl">
