@@ -24,6 +24,7 @@ const registerAssociation = (_params: Parameters.register_association, store: st
 
 const claimFees = (store: storage) => {
   assert_with_error(Tezos.get_sender() == store.ownerAddress, Errors.not_owner);
+  assert_with_error(Tezos.get_balance() > (0 as tez), Errors.no_fees);
 
   return [
     list([
@@ -52,6 +53,11 @@ const changeBaker = (params: Parameters.change_baker, store: storage): return_ =
     ]), {...store, baker: params.baker}
   ];
 }
+
+// @view
+const getFeePercentage = ([_, store]: [unit, storage]): nat => { 
+    return store.feePercentage;
+};
 
 const main = (action: parameters, store: storage) : return_ => {
   return match (action, {

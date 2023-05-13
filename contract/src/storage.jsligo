@@ -10,4 +10,5 @@ export type association_storage = {
   totalStaked: tez,
   baker: key_hash,
   ownerAddress: address,
+  parentContract: address,
 };

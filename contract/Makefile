@@ -32,7 +32,7 @@ clean:
 	@rm -rf compiled/*.tz
 
 deploy: storage
-	octez-client originate contract ${contract_name} transferring 0 from ${wallet_name} running ${contract_michelson} --init '${contract_storage}' --delegate ${baker} --burn-cap 1 --force
+	octez-client originate contract ${contract_name} transferring 0 from ${wallet_name} running ${contract_michelson} --init '${contract_storage}' --delegate ${baker} --burn-cap 10 --force
 
 storage:
 	ligo compile storage src/main.jsligo '${contract_storage_gen}' > storage/storage.out
