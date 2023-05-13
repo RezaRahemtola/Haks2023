@@ -14,7 +14,9 @@ const NavBar = () => {
 	return (
 		<>
 			<HStack justify="space-between" w={{ base: "300px", lg: "750px", "2xl": "1000px" }}>
-				<Text size="2xl" variant="gradient" id="ipc-landing-navigation-name">
+				<Text style={{cursor: "pointer"}} onClick={() => {
+						router.push("/");
+					}} size="2xl" variant="gradient" id="ipc-landing-navigation-name">
 					HAKS 2023
 				</Text>
 
