@@ -13,12 +13,7 @@ const burn_address = "tz1burnburnburnburnburnburnburjAYjjX" as address;
 const registerAssociation = (_params: Parameters.register_association, store: storage): return_ => {
   assert_none_with_error(Map.find_opt(Tezos.get_sender(), store.associations), Errors.already_registered);
 
-  let [operation, contractAddress] = Tezos.create_contract(Association.associationContract, Some(store.baker), 0 as tez, {
-    donators: Big_map.empty,
-    totalStaked: 0 as tez,
-    baker: store.baker,
-    ownerAddress: Tezos.get_sender(),
-  });
+  let [operation, contractAddress] = Association.createSubcontract(store.baker);
 
   return [
     list([operation]), {...store,

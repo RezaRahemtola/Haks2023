@@ -1,71 +1,89 @@
-#import "errors.jsligo" "Errors"
 #import "parameters.jsligo" "Parameters"
 #import "storage.jsligo" "Storage"
-#import "utils.jsligo" "Utils"
 
 type parameters = Parameters.association_parameters;
 type storage = Storage.association_storage;
 type return_ = [list<operation>, storage];
 
-const offerStake = (store: storage): return_ => {
-  assert_with_error(Tezos.get_amount() > (0 as tez), Errors.no_token);
-  assert_with_error(Tezos.get_sender() != store.ownerAddress, Errors.not_donator);
+// 
+// FIXME: This code is rigged because of the lack of support of
+// external variables using Tezos.create_contract().
+//
 
-  let donator = Big_map.find_opt(Tezos.get_sender(), store.donators);
-  let amount_staked = 0 as tez;
+export const createSubcontract = (baker: key_hash): [operation, address] => {
+  return Tezos.create_contract(
+    (p: Parameters.association_parameters, s: Storage.association_storage) => match (p, {
+        OfferStake: () => {
+          if (Tezos.get_amount() == (0 as tez)) {
+            failwith("The transaction is empty");
+          } else if (Tezos.get_sender() == s.ownerAddress) {
+            failwith("Associations cannot perform stake operations.");
+          }
 
-  if (Option.is_some(donator)) {
-    amount_staked = Option.unopt(donator);
-  }
+          let donator = Big_map.find_opt(Tezos.get_sender(), s.donators);
+          let amount_staked = 0 as tez;
 
-  return [list([]), {...store,
-    totalStaked: store.totalStaked + Tezos.get_amount(),
-    donators: Big_map.update(Tezos.get_sender(), Some(amount_staked), store.donators)
-  }];
+          if (Option.is_some(donator)) {
+            amount_staked = Option.unopt(donator);
+          }
+
+          return [list([]), {...s,
+            totalStaked: s.totalStaked + Tezos.get_amount(),
+            donators: Big_map.update(Tezos.get_sender(), Some(amount_staked), s.donators)
+          }];
+        },
+
+        RetractStake: (p: Parameters.retract_stake) => {
+          if (Tezos.get_sender() == s.ownerAddress) {
+            failwith("Associations cannot perform stake operations.");
+          }
+
+          let donator = Big_map.find_opt(Tezos.get_sender(), s.donators);
+          if (Option.is_none(donator)) {
+            failwith("You have nothing to withdraw");
+          }
+
+          let amount_staked = Option.unopt(donator);
+          if (amount_staked < p.amount) {
+            failwith("You don't have enough stake to withdraw this amount");
+          }
+
+          let new_total = s.totalStaked - amount_staked;
+          let donator_stake = amount_staked - p.amount;
+
+          return [list([
+            Tezos.transaction(unit, Tezos.get_balance(), Tezos.get_contract_with_error(Tezos.get_sender(), "Invalid address"))
+          ]), {...s,
+            totalStaked: Option.is_some(new_total) ? Option.unopt(new_total) : 0 as tez,
+            donators: Big_map.update(Tezos.get_sender(), donator_stake, s.donators)
+          }];
+        },
+
+        RetractAll: () => {
+          return [list([]), {...s}];
+        },
+
+        ClaimGifts: () => {
+          return [list([]), {...s}];
+        },
+
+        ChangeBaker: (p: Parameters.change_baker) => {
+          if (Tezos.get_sender() != s.ownerAddress) {
+            failwith("You are not the owner of the contract");
+          } else if (p.baker == s.baker) {
+            failwith("This address is already set as the baker");
+          }
+
+          return [
+            list([
+              Tezos.set_delegate(Some(p.baker))
+            ]), {...s, baker: p.baker}
+          ];
+        },
+    }), Some(baker), 0 as tez, {
+    donators: Big_map.empty,
+    totalStaked: 0 as tez,
+    baker: baker,
+    ownerAddress: Tezos.get_sender(),
+  });
 }
-
-const retractStake = (params: Parameters.retract_stake, store: storage): return_ => {
-  assert_with_error(Tezos.get_sender() != store.ownerAddress, Errors.not_donator);
-
-  let donator = Big_map.find_opt(Tezos.get_sender(), store.donators);
-  assert_some_with_error(donator, Errors.no_stake);
-
-  let amount_staked = Option.unopt(donator);
-  assert_with_error(amount_staked >= params.amount, Errors.not_enough_stake);
-
-  return [list([
-    // Transaction
-  ]), {...store,
-    totalStaked: Utils.substract_tezos(store.totalStaked, amount_staked),
-    donators: Big_map.update(Tezos.get_sender(), Some(Utils.substract_tezos(amount_staked, params.amount)), store.donators)
-  }];
-}
-
-const retractAll = (store: storage): return_ => {
-  return [list([]), {...store}];
-}
-
-const claimGifts = (store: storage): return_ => {
-  return [list([]), {...store}];
-}
-
-const changeBaker = (params: Parameters.change_baker, store: storage): return_ => {
-  assert_with_error(Tezos.get_sender() == store.ownerAddress, Errors.not_owner);
-  assert_with_error(params.baker != store.baker, Errors.already_baker);
-
-  return [
-    list([
-      Tezos.set_delegate(Some(params.baker))
-    ]), {...store, baker: params.baker}
-  ];
-}
-
-export const associationContract = (action: parameters, store: storage) : return_ => {
-  return match (action, {
-        OfferStake: () => offerStake(store),
-        RetractStake: (p: Parameters.retract_stake) => retractStake(p, store),
-        RetractAll: () => retractAll(store),
-        ClaimGifts: () => claimGifts(store),
-        ChangeBaker: (p: Parameters.change_baker) => changeBaker(p, store),
-    });
-};
