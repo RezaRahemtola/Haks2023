@@ -1,6 +1,19 @@
 import { MichelsonMap } from "@taquito/taquito";
 
+export type Association = {
+	claimable: number;
+	name: string;
+	stackedAmount: number;
+};
+
+export type FrontAssociation = {
+	name: string;
+	address: string;
+};
+
+type Donator = MichelsonMap<string, number>;
+
 export type StorageData = {
-	associations: MichelsonMap<string, any>;
-	donators: MichelsonMap<string, any>;
+	associations: MichelsonMap<string, Association>;
+	donators: MichelsonMap<string, Donator>;
 };

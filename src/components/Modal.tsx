@@ -10,7 +10,7 @@ import {
 	Text,
 	useColorModeValue,
 	VStack,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
 import colors from "@/src/theme/foundations/colors";
 import { bgColorMode, textColorMode } from "@/src/config/colorMode";

@@ -1,13 +1,10 @@
+import React, { Dispatch, SetStateAction } from "react";
+import { BeaconWallet } from "@taquito/beacon-wallet";
+import { FaWallet } from "react-icons/fa";
 import Button from "@/src/components/Button";
 import { useDappContext } from "@/src/contexts/dapp";
 import { NetworkType } from "@airgap/beacon-dapp";
-import {
-	Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger
-} from '@chakra-ui/react';
-import { BeaconWallet } from "@taquito/beacon-wallet";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction } from "react";
-import { FaWallet } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
 
 type ButtonProps = {
@@ -51,22 +48,13 @@ const ConnectButton = ({ setConnected, wallet, setUserAddress }: ButtonProps) =>
 
 	if (connected) {
 		return (
-			<>Connect
-				<Popover>
-					<PopoverTrigger>
-						<Button variant="secondary" buttonType="left-icon" icon={FaWallet} isTruncated>
+			<>
+				<div>
+					<Button variant="secondary" buttonType="left-icon" icon={FaWallet} isTruncated>
 						{address.slice(0, 5)}..{address.substring(address.length - 3)}
 					</Button>
-					</PopoverTrigger>
-						<PopoverContent>
-							<PopoverArrow />
-							<PopoverBody>
-							<Button variant="secondary" buttonType="left-icon" icon={IoMdLogOut} isTruncated onClick={disconnectWallet}>
-								Disconnect
-							</Button>
-							</PopoverBody>
-						</PopoverContent>
-				</Popover>
+					<Button variant="secondary" buttonType="left-icon" icon={IoMdLogOut} isTruncated onClick={disconnectWallet} />
+				</div>
 			</>
 		);
 	}

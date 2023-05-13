@@ -1,10 +1,10 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BeaconEvent, defaultEventCallbacks, NetworkType } from "@airgap/beacon-dapp";
 import { BeaconWallet } from "@taquito/beacon-wallet";
-import { TezosToolkit } from "@taquito/taquito";
+import { TezosToolkit, WalletContract } from "@taquito/taquito";
 
 import CONTRACT_ADDRESS from "@/src/config/environment";
 import { StorageData } from "@/src/types/types";
@@ -18,7 +18,8 @@ export default function App({ Component, pageProps }: AppProps) {
 	const [Tezos] = useState(new TezosToolkit("https://ghostnet.ecadinfra.com"));
 	const [connected, setConnected] = useState(false);
 	const [address, setAddress] = useState("");
-	const [contractStorage, setContractStorage] = useState<StorageData | undefined>(undefined);
+	const [storage, setStorage] = useState<StorageData | undefined>(undefined);
+	const [contract, setContract] = useState<WalletContract | undefined>(undefined);
 
 	const [loading, setLoading] = useState(true);
 
@@ -47,9 +48,10 @@ export default function App({ Component, pageProps }: AppProps) {
 			setLoading(false);
 
 			// creates a wallet instance
-			const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
-			const s: StorageData = await contract.storage();
-			setContractStorage(s);
+			const c = await Tezos.wallet.at(CONTRACT_ADDRESS);
+			const s: StorageData = await c.storage();
+			setStorage(s);
+			setContract(c);
 		})();
 	}, []);
 
@@ -77,8 +79,9 @@ export default function App({ Component, pageProps }: AppProps) {
 						setConnected,
 						address,
 						setAddress,
-						contractStorage,
-						setContractStorage,
+						storage: storage as StorageData,
+						setStorage: setStorage as Dispatch<SetStateAction<StorageData>>,
+						contract: contract as WalletContract,
 					}}
 				>
 					<Component {...pageProps} />

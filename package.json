@@ -14,6 +14,8 @@
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@taquito/beacon-wallet": "^14.2.0",
+    "@taquito/remote-signer": "^16.1.2",
+    "@taquito/signer": "^16.1.2",
     "@taquito/taquito": "^14.2.0",
     "framer-motion": "^10.12.10",
     "next": "13.4.2",

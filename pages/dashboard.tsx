@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 const Dashboard = () => {
-	const { address, connected, contractStorage } = useDappContext();
+	const { address, connected, storage } = useDappContext();
 	const router = useRouter();
 
 	useEffect(() => {
@@ -17,9 +17,9 @@ const Dashboard = () => {
 		})();
 	}, []);
 
-	if (contractStorage === undefined) {
+	if (storage === undefined || !connected) {
 		return <Loader />;
 	}
-	return <>{contractStorage.associations.has(address) ? <DashboardAssociation /> : <DashboardDonnor />}</>;
+	return <>{storage.associations.has(address) ? <DashboardAssociation /> : <DashboardDonnor />}</>;
 };
 export default Dashboard;

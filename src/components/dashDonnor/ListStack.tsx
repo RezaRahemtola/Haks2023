@@ -1,47 +1,28 @@
-import Button from "@/src/components/Button";
-import {
-  Table, TableCaption,
-  TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr
-} from '@chakra-ui/react';
+import { Text } from "@chakra-ui/react";
+import { useDappContext } from "@/src/contexts/dapp";
+import getDonatorSupportedAssociations from "@/src/utils/getDonatorSupportedAssociations";
+import { useEffect, useState } from "react";
+import Loader from "@/src/components/Loader";
+import StackTable from "@/src/components/dashDonnor/StackTable";
+import { FrontAssociation } from "@/src/types/types";
 
 const ListStack = () => {
-  const values = [ "Cancer reaserch", "UNICEF", "Cancer reaserch", "UNICEF" ];
-    return (<div>
-      <Text mt={10} size="2xl" variant="gradient" id="ipc-landing-navigation-name">
-        Running stacking:
-      </Text>
-      <TableContainer width={700} mt={10}>
-      <Table variant='simple'>
-        <TableCaption>Stacking list</TableCaption>
-        <Thead>
-          <Tr>
-            <Th>Name</Th>
-            <Th isNumeric></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          { values.map((element, index) => (
-            <Tr key={index}>
-            <Td><Text as='b'>{element}</Text></Td>
-            <Td isNumeric>
-              <Button
-                variant="special"
-                size="xl"
-                buttonType="left-icon"
-                id="ipc-landing-navbar-start-button"
-              >
-                Withdraw
-              </Button>
-            </Td>
-          </Tr>)) }
-        </Tbody>
-        <Tfoot>
-          <Tr>
-            <Th>Name</Th>
-            <Th isNumeric></Th>
-          </Tr>
-        </Tfoot>
-      </Table>
-    </TableContainer></div>);
-}
+	const { storage, address } = useDappContext();
+	const [values, setValues] = useState<FrontAssociation[] | undefined>();
+
+	useEffect(() => {
+		(async () => {
+			setValues(await getDonatorSupportedAssociations(storage, address));
+		})();
+	}, []);
+
+	return (
+		<>
+			<Text mt={10} size="2xl" variant="gradient">
+				Delegation in progress:
+			</Text>
+			{values === undefined ? <Loader /> : <StackTable values={values} isWithdraw />}
+		</>
+	);
+};
 export default ListStack;
