@@ -6,7 +6,11 @@ import {
 
 const ListAssociation = () => {
   const values = [ "Cancer reaserch", "UNICEF", "Cancer reaserch", "UNICEF" ];
-    return (<TableContainer width={700} mt={0}>
+    return (<div>
+      <Text size="2xl" variant="gradient" id="ipc-landing-navigation-name">
+        Associations:
+      </Text>
+      <TableContainer width={700} mt={10}>
       <Table variant='simple'>
         <TableCaption>List of associations</TableCaption>
         <Thead>
@@ -38,6 +42,6 @@ const ListAssociation = () => {
           </Tr>
         </Tfoot>
       </Table>
-    </TableContainer>);
+    </TableContainer></div>);
 }
 export default ListAssociation;

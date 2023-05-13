@@ -4,6 +4,7 @@ import { Text, VStack } from '@chakra-ui/react';
 const AmountWithdraw = () => {
   const value = 53.2;
   const dollarValue = 47.56;
+
     return ( <VStack>
               <Text fontSize="50px">{value} <Text as='u'>XTZ</Text></Text>
               <Button
@@ -16,4 +17,5 @@ const AmountWithdraw = () => {
               <Text fontSize="15px" mt="9px"> ( {dollarValue} $ )</Text>
             </VStack>);
 }
+
 export default AmountWithdraw;

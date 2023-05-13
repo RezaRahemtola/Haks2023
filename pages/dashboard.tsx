@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import DashboardAssociation from "@/src/components/dashAsso/Dash";
+import DashboardDonnor from "@/src/components/dashDonnor/Dash";
+import Loader from "@/src/components/Loader";
 import { useDappContext } from "@/src/contexts/dapp";
-import { useRouter } from "next/router";
 import { StorageData } from "@/src/types/types";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
 	const { Tezos, address, connected } = useDappContext();
@@ -26,12 +29,11 @@ const Dashboard = () => {
 	}, [Tezos]);
 
 	if (storage === undefined) {
-		return <div>LOADING</div>;
+		return <Loader />;
 	}
 	return (
 		<>
-			<div>DASHBOARD</div>
-			{storage.associations.has(address) ? <div>ASSO DASHBOARD</div> : <div>USER DASHBOARD</div>}
+			{storage.associations.has(address) ? <DashboardAssociation /> : <DashboardDonnor />}
 		</>
 	);
 };

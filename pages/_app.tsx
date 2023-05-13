@@ -1,14 +1,15 @@
-import { Center, ChakraProvider, Spinner } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 
+import Loader from "@/src/components/Loader";
 import DappContext from "@/src/contexts/dapp";
 import theme from "@/src/theme";
 import "@/src/theme/index.css";
+import { BeaconEvent, defaultEventCallbacks, NetworkType } from "@airgap/beacon-dapp";
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { TezosToolkit } from "@taquito/taquito";
-import { BeaconEvent, defaultEventCallbacks, NetworkType } from "@airgap/beacon-dapp";
 
 export default function App({ Component, pageProps }: AppProps) {
 	const [wallet, setWallet] = useState<BeaconWallet>(
@@ -44,11 +45,7 @@ export default function App({ Component, pageProps }: AppProps) {
 	}, []);
 
 	if (connecting) {
-		return (
-			<Center mt="160px">
-				<Spinner w="64px" h="64px" />
-			</Center>
-		);
+		return <Loader />
 	}
 
 	return (

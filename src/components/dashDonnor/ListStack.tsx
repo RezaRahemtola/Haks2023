@@ -6,7 +6,11 @@ import {
 
 const ListStack = () => {
   const values = [ "Cancer reaserch", "UNICEF", "Cancer reaserch", "UNICEF" ];
-    return (<TableContainer width={700}>
+    return (<div>
+      <Text mt={10} size="2xl" variant="gradient" id="ipc-landing-navigation-name">
+        Running stacking:
+      </Text>
+      <TableContainer width={700} mt={10}>
       <Table variant='simple'>
         <TableCaption>Stacking list</TableCaption>
         <Thead>
@@ -38,6 +42,6 @@ const ListStack = () => {
           </Tr>
         </Tfoot>
       </Table>
-    </TableContainer>);
+    </TableContainer></div>);
 }
 export default ListStack;
