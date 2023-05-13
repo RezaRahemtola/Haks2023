@@ -1,21 +1,17 @@
-import React, { Dispatch, SetStateAction, useEffect } from "react";
-import { TezosToolkit } from "@taquito/taquito";
+import React, { Dispatch, SetStateAction } from "react";
 import { BeaconWallet } from "@taquito/beacon-wallet";
-import { BeaconEvent, defaultEventCallbacks, NetworkType } from "@airgap/beacon-dapp";
+import { NetworkType } from "@airgap/beacon-dapp";
 import { FaWallet } from "react-icons/fa";
 import Button from "@/src/components/Button";
 import { useDappContext } from "@/src/contexts/dapp";
 
 type ButtonProps = {
-	Tezos: TezosToolkit;
-	setTezos: Dispatch<SetStateAction<TezosToolkit>>;
-	setWallet: Dispatch<SetStateAction<any>>;
 	setConnected: Dispatch<SetStateAction<boolean>>;
 	wallet: BeaconWallet;
 	setUserAddress: Dispatch<SetStateAction<string>>;
 };
 
-const ConnectButton = ({ Tezos, setWallet, setConnected, wallet, setUserAddress, setTezos }: ButtonProps) => {
+const ConnectButton = ({ setConnected, wallet, setUserAddress }: ButtonProps) => {
 	const { connected, address } = useDappContext();
 
 	const setup = async (userAddress: string): Promise<void> => {
@@ -43,34 +39,8 @@ const ConnectButton = ({ Tezos, setWallet, setConnected, wallet, setUserAddress,
 			await wallet.clearActiveAccount();
 		}
 		setUserAddress("");
-		setTezos(new TezosToolkit("https://ghostnet.ecadinfra.com"));
 		setConnected(false);
 	};
-
-	useEffect(() => {
-		(async () => {
-			// creates a wallet instance
-			const w = new BeaconWallet({
-				name: "Haks 2023",
-				preferredNetwork: NetworkType.GHOSTNET,
-				disableDefaultEvents: true, // Disable all events / UI. This also disables the pairing alert.
-				eventHandlers: {
-					// To keep the pairing alert, we have to add the following default event handlers back
-					[BeaconEvent.PAIR_INIT]: {
-						handler: defaultEventCallbacks.PAIR_INIT,
-					},
-				},
-			});
-			Tezos.setWalletProvider(w);
-			setWallet(w);
-			// checks if wallet was connected before
-			const activeAccount = await w.client.getActiveAccount();
-			if (activeAccount) {
-				setUserAddress(await w?.getPKH());
-				setConnected(true);
-			}
-		})();
-	}, []);
 
 	if (connected) {
 		return (

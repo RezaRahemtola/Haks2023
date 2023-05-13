@@ -8,9 +8,8 @@ type DappContextProps = {
 	connected: boolean;
 	setAddress: Dispatch<SetStateAction<string>>;
 	setConnected: Dispatch<SetStateAction<boolean>>;
-	setTezos: Dispatch<SetStateAction<TezosToolkit>>;
-	setWallet: Dispatch<SetStateAction<BeaconWallet | null>>;
-	wallet: BeaconWallet | null;
+	setWallet: Dispatch<SetStateAction<BeaconWallet>>;
+	wallet: BeaconWallet;
 };
 
 type DappContextType = DappContextProps | undefined;

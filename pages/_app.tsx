@@ -1,19 +1,55 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { Center, ChakraProvider, Spinner } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import DappContext from "@/src/contexts/dapp";
 import theme from "@/src/theme";
 import "@/src/theme/index.css";
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { TezosToolkit } from "@taquito/taquito";
+import { BeaconEvent, defaultEventCallbacks, NetworkType } from "@airgap/beacon-dapp";
 
 export default function App({ Component, pageProps }: AppProps) {
-	const [wallet, setWallet] = useState<BeaconWallet | null>(null);
-	const [Tezos, setTezos] = useState(new TezosToolkit("https://ghostnet.ecadinfra.com"));
+	const [wallet, setWallet] = useState<BeaconWallet>(
+		new BeaconWallet({
+			name: "Haks 2023",
+			preferredNetwork: NetworkType.GHOSTNET,
+			disableDefaultEvents: true, // Disable all events / UI. This also disables the pairing alert.
+			eventHandlers: {
+				// To keep the pairing alert, we have to add the following default event handlers back
+				[BeaconEvent.PAIR_INIT]: {
+					handler: defaultEventCallbacks.PAIR_INIT,
+				},
+			},
+		})
+	);
+	const [Tezos] = useState(new TezosToolkit("https://ghostnet.ecadinfra.com"));
 	const [connected, setConnected] = useState(false);
 	const [address, setAddress] = useState("");
+
+	const [connecting, setConnecting] = useState(true);
+
+	useEffect(() => {
+		(async () => {
+			Tezos.setWalletProvider(wallet);
+			// checks if wallet was connected before
+			const activeAccount = await wallet.client.getActiveAccount();
+			if (activeAccount) {
+				setAddress(await wallet.getPKH());
+				setConnected(true);
+			}
+			setConnecting(false);
+		})();
+	}, []);
+
+	if (connecting) {
+		return (
+			<Center mt="160px">
+				<Spinner w="64px" h="64px" />
+			</Center>
+		);
+	}
 
 	return (
 		<>
@@ -27,9 +63,7 @@ export default function App({ Component, pageProps }: AppProps) {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			</Head>
 			<ChakraProvider theme={theme} resetCSS>
-				<DappContext.Provider
-					value={{ wallet, setWallet, Tezos, setTezos, connected, setConnected, address, setAddress }}
-				>
+				<DappContext.Provider value={{ wallet, setWallet, Tezos, connected, setConnected, address, setAddress }}>
 					<Component {...pageProps} />
 				</DappContext.Provider>
 			</ChakraProvider>

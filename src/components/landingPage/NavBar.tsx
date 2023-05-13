@@ -9,7 +9,7 @@ import { useDappContext } from "@/src/contexts/dapp";
 
 const NavBar = () => {
 	const router = useRouter();
-	const { wallet, setWallet, setConnected, setAddress, Tezos, setTezos } = useDappContext();
+	const { wallet, setConnected, setAddress, Tezos } = useDappContext();
 
 	return (
 		<>
@@ -30,14 +30,7 @@ const NavBar = () => {
 				>
 					Start
 				</Button>
-				<WalletButton
-					wallet={wallet}
-					setWallet={setWallet}
-					setConnected={setConnected}
-					Tezos={Tezos}
-					setTezos={setTezos}
-					setUserAddress={setAddress}
-				/>
+				<WalletButton wallet={wallet} setConnected={setConnected} setUserAddress={setAddress} />
 			</HStack>
 		</>
 	);
