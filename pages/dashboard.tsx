@@ -2,13 +2,11 @@ import DashboardAssociation from "@/src/components/dashAsso/Dash";
 import DashboardDonnor from "@/src/components/dashDonnor/Dash";
 import Loader from "@/src/components/Loader";
 import { useDappContext } from "@/src/contexts/dapp";
-import { StorageData } from "@/src/types/types";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const Dashboard = () => {
-	const { Tezos, address, connected } = useDappContext();
-	const [storage, setStorage] = useState<StorageData | undefined>(undefined);
+	const { address, connected, contractStorage } = useDappContext();
 	const router = useRouter();
 
 	useEffect(() => {
@@ -19,22 +17,9 @@ const Dashboard = () => {
 		})();
 	}, []);
 
-	useEffect(() => {
-		(async () => {
-			// creates a wallet instance
-			const contract = await Tezos.wallet.at("KT1MEqk1xYNUZVyKzNhTbNuAAgq9x2kg7q5B");
-			const s: StorageData = await contract.storage();
-			setStorage(s);
-		})();
-	}, [Tezos]);
-
-	if (storage === undefined) {
+	if (contractStorage === undefined) {
 		return <Loader />;
 	}
-	return (
-		<>
-			{storage.associations.has(address) ? <DashboardAssociation /> : <DashboardDonnor />}
-		</>
-	);
+	return <>{contractStorage.associations.has(address) ? <DashboardAssociation /> : <DashboardDonnor />}</>;
 };
 export default Dashboard;

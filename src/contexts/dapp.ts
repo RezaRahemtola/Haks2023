@@ -1,6 +1,7 @@
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { TezosToolkit } from "@taquito/taquito";
 import { BeaconWallet } from "@taquito/beacon-wallet";
+import { StorageData } from "@/src/types/types";
 
 type DappContextProps = {
 	Tezos: TezosToolkit;
@@ -8,8 +9,9 @@ type DappContextProps = {
 	connected: boolean;
 	setAddress: Dispatch<SetStateAction<string>>;
 	setConnected: Dispatch<SetStateAction<boolean>>;
-	setWallet: Dispatch<SetStateAction<BeaconWallet>>;
 	wallet: BeaconWallet;
+	contractStorage?: StorageData;
+	setContractStorage: Dispatch<SetStateAction<StorageData | undefined>>;
 };
 
 type DappContextType = DappContextProps | undefined;
