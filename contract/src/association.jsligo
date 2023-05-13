@@ -1,0 +1,71 @@
+#import "errors.jsligo" "Errors"
+#import "parameters.jsligo" "Parameters"
+#import "storage.jsligo" "Storage"
+#import "utils.jsligo" "Utils"
+
+type parameters = Parameters.association_parameters;
+type storage = Storage.association_storage;
+type return_ = [list<operation>, storage];
+
+const offerStake = (store: storage): return_ => {
+  assert_with_error(Tezos.get_amount() > (0 as tez), Errors.no_token);
+  assert_with_error(Tezos.get_sender() != store.ownerAddress, Errors.not_donator);
+
+  let donator = Big_map.find_opt(Tezos.get_sender(), store.donators);
+  let amount_staked = 0 as tez;
+
+  if (Option.is_some(donator)) {
+    amount_staked = Option.unopt(donator);
+  }
+
+  return [list([]), {...store,
+    totalStaked: store.totalStaked + Tezos.get_amount(),
+    donators: Big_map.update(Tezos.get_sender(), Some(amount_staked), store.donators)
+  }];
+}
+
+const retractStake = (params: Parameters.retract_stake, store: storage): return_ => {
+  assert_with_error(Tezos.get_sender() != store.ownerAddress, Errors.not_donator);
+
+  let donator = Big_map.find_opt(Tezos.get_sender(), store.donators);
+  assert_some_with_error(donator, Errors.no_stake);
+
+  let amount_staked = Option.unopt(donator);
+  assert_with_error(amount_staked >= params.amount, Errors.not_enough_stake);
+
+  return [list([
+    // Transaction
+  ]), {...store,
+    totalStaked: Utils.substract_tezos(store.totalStaked, amount_staked),
+    donators: Big_map.update(Tezos.get_sender(), Some(Utils.substract_tezos(amount_staked, params.amount)), store.donators)
+  }];
+}
+
+const retractAll = (store: storage): return_ => {
+  return [list([]), {...store}];
+}
+
+const claimGifts = (store: storage): return_ => {
+  return [list([]), {...store}];
+}
+
+const changeBaker = (params: Parameters.change_baker, store: storage): return_ => {
+  assert_with_error(Tezos.get_sender() == store.ownerAddress, Errors.not_owner);
+  assert_with_error(params.baker != store.baker, Errors.already_baker);
+
+  return [
+    list([
+      Tezos.set_delegate(Some(params.baker))
+    ]), {...store, baker: params.baker}
+  ];
+}
+
+export const associationContract = (action: parameters, store: storage) : return_ => {
+  return match (action, {
+        OfferStake: () => offerStake(store),
+        RetractStake: (p: Parameters.retract_stake) => retractStake(p, store),
+        RetractAll: () => retractAll(store),
+        ClaimGifts: () => claimGifts(store),
+        ChangeBaker: (p: Parameters.change_baker) => changeBaker(p, store),
+    });
+};

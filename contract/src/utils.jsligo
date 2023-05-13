@@ -1,7 +1,7 @@
 #import "errors.jsligo" "Errors"
 #import "storage.jsligo" "Storage"
 
-export const assert_is_owner = (store: Storage.t) => {
+export const assert_is_owner = (store: Storage.main_storage) => {
     assert_with_error(Tezos.get_sender() == store.ownerAddress, Errors.not_owner);
 }
 

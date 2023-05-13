@@ -1,15 +1,13 @@
-export type association = {
-  stakedAmount: tez,
-  name: string,
+export type main_storage = {
+  associations: map<address, address>,
+  feePercentage: nat,
+  baker: key_hash,
+  ownerAddress: address,
 };
 
-export type donator = map<address, tez>;
-
-export type t = {
-  donators: big_map<address, donator>,
-  associations: map<address, association>,
+export type association_storage = {
+  donators: big_map<address, tez>,
   totalStaked: tez,
-  feePercentage: nat,
   baker: key_hash,
   ownerAddress: address,
 };

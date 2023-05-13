@@ -1,9 +1,5 @@
-export type offer_stake = {
-  associationAddress: address,
-};
-
 export type retract_stake = {
-  associationAddress: address
+  amount: tez
 };
 
 export type register_association = {
@@ -18,11 +14,15 @@ export type change_baker = {
   baker: key_hash,
 };
 
-export type t =
-  ["OfferStake", offer_stake]
-| ["RetractStake", retract_stake]
-| ["RetractAll"]
-| ["RegisterAsAssociation", register_association]
+export type main_parameters =
+  ["RegisterAssociation", register_association]
 | ["ChangeOwner", change_owner]
 | ["ChangeBaker", change_baker]
 | ["ClaimFees"];
+
+export type association_parameters =
+  ["OfferStake"]
+| ["RetractStake", retract_stake]
+| ["RetractAll"]
+| ["ClaimGifts"]
+| ["ChangeBaker", change_baker];
