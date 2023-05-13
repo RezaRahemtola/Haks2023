@@ -10,7 +10,7 @@ type return_ = [list<operation>, storage];
 // external variables using Tezos.create_contract().
 //
 
-export const createSubcontract = (baker: key_hash): [operation, address] => {
+export const createSubcontract = (baker: key_hash, name: string): [operation, address] => {
   return Tezos.create_contract(
     (p: Parameters.association_parameters, s: Storage.association_storage) => match (p, {
         OfferStake: () => {
@@ -26,16 +26,18 @@ export const createSubcontract = (baker: key_hash): [operation, address] => {
           if (Option.is_some(donator)) {
             amount_staked = Option.unopt(donator);
           }
-
+          
           return [list([]), {...s,
             totalStaked: s.totalStaked + Tezos.get_amount(),
-            donators: Big_map.update(Tezos.get_sender(), Some(amount_staked), s.donators)
+            donators: Big_map.update(Tezos.get_sender(), Some(amount_staked + Tezos.get_amount()), s.donators)
           }];
         },
 
         RetractStake: (p: Parameters.retract_stake) => {
           if (Tezos.get_sender() == s.ownerAddress) {
             failwith("Associations cannot perform stake operations");
+          } else if (p.amount == (0 as tez)) {
+            failwith("Invalid withdraw amount");
           }
 
           let donator = Big_map.find_opt(Tezos.get_sender(), s.donators);
@@ -81,7 +83,7 @@ export const createSubcontract = (baker: key_hash): [operation, address] => {
         },
 
         ClaimGifts: () => {
-          if (Tezos.get_sender() == s.ownerAddress) {
+          if (Tezos.get_sender() != s.ownerAddress) {
             failwith("You are not the owner of the contract");
           }
 
@@ -118,6 +120,7 @@ export const createSubcontract = (baker: key_hash): [operation, address] => {
           ];
         },
     }), Some(baker), 0 as tez, {
+    name,
     donators: Big_map.empty,
     totalStaked: 0 as tez,
     baker: baker,

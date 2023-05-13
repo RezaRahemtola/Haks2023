@@ -6,6 +6,7 @@ export type main_storage = {
 };
 
 export type association_storage = {
+  name: string,
   donators: big_map<address, tez>,
   totalStaked: tez,
   baker: key_hash,
