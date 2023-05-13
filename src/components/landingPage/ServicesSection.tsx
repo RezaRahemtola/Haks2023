@@ -2,6 +2,9 @@ import { Box, Img, Stack, Text, useBreakpointValue, useColorMode, useColorModeVa
 
 import { textColorMode } from "@/src/config/colorMode";
 import colors from "@/src/theme/foundations/colors";
+import { IoWalletOutline } from "react-icons/io5";
+import { useRouter } from "next/router";
+import Button from "../Button";
 
 const ServicesCard = ({
 	title,
@@ -46,7 +49,9 @@ const ServicesSection = (): JSX.Element => {
 
 	const textColor = useColorModeValue(textColorMode.light, textColorMode.dark);
 	const { colorMode } = useColorMode();
+	const router = useRouter();
 
+	
 	return (
 		<VStack
 			spacing="72px"
@@ -75,20 +80,46 @@ const ServicesSection = (): JSX.Element => {
 				</Box>
 			</Text>
 			<Stack direction={{ base: "column", lg: "row" }} spacing="48px" zIndex={10}>
-				<ServicesCard
-					title="Donors"
-					description="Donors don't lose purchasing power when donating to charities"
-					icon="/assets/icons/people.svg"
-					position="left"
-					id="ipc-landing-services-cloud-storage"
-				/>
-				<ServicesCard
-					title="Charities"
-					description="Charities become more attractive to donors"
-					icon="/assets/icons/solidarity.svg"
-					position="right"
-					id="ipc-landing-services-cloud-computing"
-				/>
+				<VStack>
+					<ServicesCard
+						title="Donors"
+						description="Donors don't lose purchasing power when donating to charities"
+						icon="/assets/icons/people.svg"
+						position="left"
+						id="ipc-landing-services-cloud-storage"
+					/>
+					<Button
+						variant="special"
+						size={isMobile ? "xl" : "2xl"}
+						buttonType="left-icon"
+						icon={IoWalletOutline}
+						onClick={() => {
+							router.push("/registe/donor");
+						}}
+					>
+						Start as donor
+					</Button>
+				</VStack>
+				<VStack>
+					<ServicesCard
+						title="Charities"
+						description="Charities become more attractive to donors"
+						icon="/assets/icons/solidarity.svg"
+						position="right"
+						id="ipc-landing-services-cloud-computing"
+					/>
+					<Button
+						variant="special"
+						size={isMobile ? "xl" : "2xl"}
+						buttonType="left-icon"
+						icon={IoWalletOutline}
+						onClick={() => {
+							router.push("/registe/charitie");
+						}}
+					>
+						Start as charitie
+					</Button>
+				</VStack>
 			</Stack>
 			{!isMobile && (
 				<Box as="div" position="absolute" top="0px" left="-200px" w="1000px">
