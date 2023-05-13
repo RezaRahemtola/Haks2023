@@ -3,9 +3,9 @@ import { useRouter } from "next/router";
 
 import { IoRocketSharp } from "react-icons/io5";
 
-import colors from "@/src/theme/foundations/colors";
-import { textColorMode } from "@/src/config/colorMode";
 import Button from "@/src/components/Button";
+import { textColorMode } from "@/src/config/colorMode";
+import colors from "@/src/theme/foundations/colors";
 
 const HeadingSection = () => {
 	const router = useRouter();
@@ -17,22 +17,21 @@ const HeadingSection = () => {
 		<VStack w="100%" spacing="64px" textAlign="center">
 			<VStack spacing="32px" w={{ base: "300px", sm: "550px", md: "600px", lg: "1000px" }}>
 				<Text size={isMobile ? "4xl" : "7xl"} id="ipc-landing-headline" color={textColor}>
-					The first distributed cloud{" "}
-					<Box
+				Finance charities while maintaining 					<Box
 						as="span"
 						backgroundImage={`linear-gradient(135deg, ${colors.blue[900]} 0%, ${colors.red[900]} 100%)`}
 						bgClip="text"
 					>
-						unsealing
+						purchasing power
 					</Box>{" "}
-					your data.
+					.
 				</Text>
 				<Text size="xl" maxW="512px" id="ipc-landing-subHeadline" color={textColor}>
-					Build on top of Aleph, the next generation network of{" "}
+				The platform connecting charities and donors to allow them to stack their XTZ for the benefit of{" "}
 					<Box as="span" fontWeight="700">
-						distributed
+					solidarity
 					</Box>{" "}
-					big data applications.
+					.
 				</Text>
 			</VStack>
 			<Button
@@ -45,7 +44,7 @@ const HeadingSection = () => {
 				}}
 				id="ipc-landing-heading-start-button"
 			>
-				Start the experiment{!isMobile && " for free"}
+				Login
 			</Button>
 			{!isMobile && (
 				<>
