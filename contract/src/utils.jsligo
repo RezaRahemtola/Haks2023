@@ -1,7 +1,19 @@
 #import "errors.jsligo" "Errors"
 #import "storage.jsligo" "Storage"
 
-export const assert_is_owner = (store: Storage.t) =>
-{
+export const assert_is_owner = (store: Storage.t) => {
     assert_with_error(Tezos.get_sender() == store.ownerAddress, Errors.not_owner);
+}
+
+export const assert_is_empty = () => {
+    assert_with_error(Tezos.get_amount() == (0 as tez), Errors.unneeded_token);
+}
+
+export const substract_tezos = (lhs: tez, rhs: tez): tez => {
+    let result = lhs - rhs;
+
+    if (Option.is_some(result)) {
+        return Option.unopt(result);
+    }
+    return 0 as tez;
 }

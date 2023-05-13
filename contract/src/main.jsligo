@@ -69,8 +69,29 @@ const offerStake = (params: Parameters.offer_stake, store: storage): return_ => 
   }];
 }
 
-const retractStake = (_params: Parameters.retract_stake, store: storage): return_ => {
-  return [list([]), {...store}];
+const retractStake = (params: Parameters.retract_stake, store: storage): return_ => {
+  assert_none_with_error(Map.find_opt(Tezos.get_sender(), store.associations), Errors.not_donator);
+
+  let opt = Map.find_opt(params.associationAddress, store.associations);
+  assert_some_with_error(opt, Errors.not_association);
+
+  let donator = getOrCreateDonator(store);
+  let association = Option.unopt(opt);
+  let amount_staked: tez = getStakeForAssociation(params.associationAddress, store);
+  assert_with_error(amount_staked > (0 as tez), Errors.no_stake);
+
+  return [list([
+
+  ]), {...store,
+    totalStaked: Utils.substract_tezos(store.totalStaked, amount_staked),
+    associations: Map.update(params.associationAddress, Some({
+      ...association,
+      stakedAmount: Utils.substract_tezos(association.stakedAmount, amount_staked),
+    }), store.associations),
+    donators: Big_map.update(Tezos.get_sender(), Some(
+      Map.update(params.associationAddress, None(), donator)
+    ), store.donators)
+  }];
 }
 
 const retractAll = (store: storage): return_ => {
