@@ -7,8 +7,9 @@ const getBalanceAssociation = async (storage: StorageData, Tezos: TezosToolkit, 
     if (contractAddress === undefined) return undefined;
     const contract = await Tezos.wallet.at(contractAddress);
     const storageSubcontract: StorageData = await contract.storage();
-    const balance = storageSubcontract.totalStaked / 1000000;
-    return balance;
+    const balance = await Tezos.tz.getBalance(contractAddress);
+    const realBalance = balance.minus(storageSubcontract.totalStaked).dividedBy(1000000);
+    return realBalance;
   } catch (error) {
     console.error("Error in getBalanceAssociation:", error);
     throw error;
