@@ -16,9 +16,11 @@ const ConnectionCharity = (): JSX.Element => {
 
     return (
         <VStack spacing={{ base: "24px", md: "50px" }}>
-			
+			<VStack h={"1rem"}>
+
+			</VStack>
 			<VStack h={"5rem" } >
-				<Text size="2xl" variant="gradient" id="haks2023-landing-navigation-name" onClick={() => {
+				<Text style={{cursor: "pointer"}} size="2xl" variant="gradient" id="haks2023-landing-navigation-name" onClick={() => {
 					router.push("/");
 				}}>
 					HAKS 2023
