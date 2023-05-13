@@ -1,13 +1,20 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
+import Head from "next/head";
+import { useState } from "react";
 
+import DappContext from "@/src/contexts/dapp";
 import theme from "@/src/theme";
 import "@/src/theme/index.css";
-import Head from "next/head";
-import { DAPP_NAME } from "@/src/lib/settings";
-import { DAppProvider } from "@/src/lib/dappstate";
+import { BeaconWallet } from "@taquito/beacon-wallet";
+import { TezosToolkit } from "@taquito/taquito";
 
 export default function App({ Component, pageProps }: AppProps) {
+	const [wallet, setWallet] = useState<BeaconWallet | null>(null);
+	const [Tezos, setTezos] = useState(new TezosToolkit("https://ghostnet.ecadinfra.com"));
+	const [connected, setConnected] = useState(false);
+	const [address, setAddress] = useState("");
+
 	return (
 		<>
 			<Head>
@@ -20,9 +27,11 @@ export default function App({ Component, pageProps }: AppProps) {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			</Head>
 			<ChakraProvider theme={theme} resetCSS>
-				<DAppProvider appName={DAPP_NAME}>
+				<DappContext.Provider
+					value={{ wallet, setWallet, Tezos, setTezos, connected, setConnected, address, setAddress }}
+				>
 					<Component {...pageProps} />
-				</DAppProvider>
+				</DappContext.Provider>
 			</ChakraProvider>
 		</>
 	);

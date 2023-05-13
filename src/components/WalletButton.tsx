@@ -1,34 +1,94 @@
-import React from "react";
-import { IoRocketSharp } from "react-icons/io5";
-import { useAccountPkh, useConnect, useReady, useWallet } from "@/src/lib/dappstate";
-import { NETWORK } from "@/src/lib/settings";
-import Button from "./Button";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
+import { TezosToolkit } from "@taquito/taquito";
+import { BeaconWallet } from "@taquito/beacon-wallet";
+import { BeaconEvent, defaultEventCallbacks, NetworkType } from "@airgap/beacon-dapp";
+import { FaWallet } from "react-icons/fa";
+import Button from "@/src/components/Button";
+import { useDappContext } from "@/src/contexts/dapp";
 
-const WalletButton = () => {
-	const ready = useReady();
-	const wallet = useWallet();
-	const acc = useAccountPkh();
-	const connect = useConnect();
-	const handleConnect = React.useCallback(async () => {
+type ButtonProps = {
+	Tezos: TezosToolkit;
+	setTezos: Dispatch<SetStateAction<TezosToolkit>>;
+	setWallet: Dispatch<SetStateAction<any>>;
+	setConnected: Dispatch<SetStateAction<boolean>>;
+	wallet: BeaconWallet;
+	setUserAddress: Dispatch<SetStateAction<string>>;
+};
+
+const ConnectButton = ({ Tezos, setWallet, setConnected, wallet, setUserAddress, setTezos }: ButtonProps) => {
+	const { connected, address } = useDappContext();
+
+	const setup = async (userAddress: string): Promise<void> => {
+		setUserAddress(userAddress);
+	};
+	const connectWallet = async (): Promise<void> => {
 		try {
-			await connect(NETWORK);
-		} catch (err: any) {
-			alert(err.message);
+			await wallet?.requestPermissions({
+				network: {
+					type: NetworkType.GHOSTNET,
+					rpcUrl: "https://ghostnet.ecadinfra.com",
+				},
+			});
+			// gets user's address
+			const userAddress = await wallet.getPKH();
+			await setup(userAddress);
+			setConnected(true);
+		} catch (error) {
+			console.error(error);
 		}
-	}, [connect]);
+	};
 
-	if (ready) {
-		return <p>{acc}</p>;
+	const disconnectWallet = async (): Promise<void> => {
+		if (wallet) {
+			await wallet.clearActiveAccount();
+		}
+		setUserAddress("");
+		setTezos(new TezosToolkit("https://ghostnet.ecadinfra.com"));
+		setConnected(false);
+	};
+
+	useEffect(() => {
+		(async () => {
+			// creates a wallet instance
+			const w = new BeaconWallet({
+				name: "Haks 2023",
+				preferredNetwork: NetworkType.GHOSTNET,
+				disableDefaultEvents: true, // Disable all events / UI. This also disables the pairing alert.
+				eventHandlers: {
+					// To keep the pairing alert, we have to add the following default event handlers back
+					[BeaconEvent.PAIR_INIT]: {
+						handler: defaultEventCallbacks.PAIR_INIT,
+					},
+				},
+			});
+			Tezos.setWalletProvider(w);
+			setWallet(w);
+			// checks if wallet was connected before
+			const activeAccount = await w.client.getActiveAccount();
+			if (activeAccount) {
+				setUserAddress(await w?.getPKH());
+				setConnected(true);
+			}
+		})();
+	}, []);
+
+	if (connected) {
+		return (
+			<>
+				<Button variant="secondary" buttonType="left-icon" icon={FaWallet} isTruncated>
+					{address.slice(0, 5)}..{address.substring(address.length - 3)}
+				</Button>
+				<Button variant="secondary" buttonType="left-icon" icon={FaWallet} isTruncated onClick={disconnectWallet}>
+					Disconnect
+				</Button>
+			</>
+		);
 	}
-	return wallet ? (
-		<Button variant="special" buttonType="left-icon" icon={IoRocketSharp} onClick={handleConnect}>
-			Connect to wallet
+	return (
+		<Button variant="secondary" buttonType="left-icon" icon={FaWallet} onClick={connectWallet}>
+			Connect
 		</Button>
-	) : (
-		<a href="https://templewallet.com/" rel="noopener">
-			<Button>Install Temple</Button>
-		</a>
 	);
 };
 
-export default WalletButton;
+export default ConnectButton;
