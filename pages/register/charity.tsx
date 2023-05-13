@@ -1,9 +1,10 @@
-import { Text, FormLabel, Box, useBreakpointValue, Input, FormControl, VStack, useColorModeValue , useDisclosure} from "@chakra-ui/react";
-import { textColorMode } from "@/src/config/colorMode";
-import { useRouter } from "next/router";
-import { useState , ChangeEvent} from "react";
 import Button from "@/src/components/Button";
 import Modal from "@/src/components/Modal";
+import { textColorMode } from "@/src/config/colorMode";
+import { useDappContext } from "@/src/contexts/dapp";
+import { Box, FormControl, FormLabel, Input, Text, useBreakpointValue, useColorModeValue, useDisclosure, VStack } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { ChangeEvent, useState } from "react";
 
 const ConnectionCharity = (): JSX.Element => {
 	const isMobile: boolean = useBreakpointValue({ base: true, lg: false }) || false;
@@ -13,12 +14,21 @@ const ConnectionCharity = (): JSX.Element => {
 	const [isLoading] = useState(false);
 	const charityName = "";
 	const [name, setName] = useState('');
+	const { contract } = useDappContext();
+
+	const onRegister = async () => {
+		try {
+			const result = await contract.methods.registerAsAssociation(name).send();
+			const confirmation = await result.confirmation(1);
+			if (confirmation)
+				console.log("Operation hash:", confirmation);
+		} catch (e) {
+			console.error("Error: ", e);
+		}
+	};
 
     return (
         <VStack spacing={{ base: "24px", md: "50px" }}>
-			<VStack h={"1rem"}>
-
-			</VStack>
 			<VStack h={"5rem" } >
 				<Text style={{cursor: "pointer"}} size="2xl" variant="gradient" id="haks2023-landing-navigation-name" onClick={() => {
 					router.push("/");
@@ -32,7 +42,7 @@ const ConnectionCharity = (): JSX.Element => {
 				</Text>
 			</VStack>
 			<Text size="2xl" maxW="800px" color={textColor} align={"center"}>
-					
+
 				Join the movement for a brighter future.{" "}
                     <br />
 					Register your association
@@ -63,7 +73,7 @@ const ConnectionCharity = (): JSX.Element => {
 							size="lg"
 							isLoading={isLoading}
 							id="Haks2023-dashboard-update-programName-button"
-							onClick={onClose}
+							onClick={onRegister}
 						>
 							OK
 						</Button>
