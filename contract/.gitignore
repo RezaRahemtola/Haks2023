@@ -1,8 +1,3 @@
-**/node_modules
-**/.env
-.DS_Store
 .ligo/
-_esy/
 /compiled
-**/compiled
-/deploy/metadata.json
+/storage/storage.out

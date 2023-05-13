@@ -1,5 +1,0 @@
-(Pair (Pair (Pair {} "tz1h4eqwaDsJCqTP34DZycTdVycNbawYWM3R")
-            {}
-            "tz1h4eqwaDsJCqTP34DZycTdVycNbawYWM3R")
-      (Pair 0 0)
-      0)
