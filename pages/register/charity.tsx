@@ -11,10 +11,12 @@ import {
 	useBreakpointValue,
 	useColorModeValue,
 	useDisclosure,
-	VStack
+	VStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { StorageData } from "@/src/types/types";
+import Loader from "@/src/components/Loader";
 
 const ConnectionCharity = (): JSX.Element => {
 	const isMobile: boolean = useBreakpointValue({ base: true, lg: false }) || false;
@@ -24,16 +26,30 @@ const ConnectionCharity = (): JSX.Element => {
 	const [isLoading, setIsLoading] = useState(false);
 	const charityName = "";
 	const [name, setName] = useState("");
-	const { contract } = useDappContext();
+	const { contract, setStorage, connected } = useDappContext();
+
+	useEffect(() => {
+		(async () => {
+			if (!connected) {
+				router.push("/");
+			}
+		})();
+	}, []);
+
+	if (!connected) {
+		return <Loader />;
+	}
 
 	const onRegister = async () => {
-		const delay = ms => new Promise(res => setTimeout(res, ms));
+		const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 		setIsLoading(true);
 		try {
 			const result = await contract.methods.registerAssociation(name).send();
-			await delay(5000);
-			const confirmation = await result.confirmation(1);
-			console.log("Success incription");
+			await delay(4000);
+			await result.confirmation(1);
+			const s: StorageData = await contract.storage();
+			setStorage(s);
+			await delay(1000);
 			router.push("/dashboard");
 			setIsLoading(false);
 		} catch (e) {
