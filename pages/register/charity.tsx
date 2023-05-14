@@ -11,7 +11,7 @@ import {
 	useBreakpointValue,
 	useColorModeValue,
 	useDisclosure,
-	VStack,
+	VStack
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
@@ -21,16 +21,23 @@ const ConnectionCharity = (): JSX.Element => {
 	const textColor = useColorModeValue(textColorMode.light, textColorMode.dark);
 	const router = useRouter();
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [isLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const charityName = "";
 	const [name, setName] = useState("");
 	const { contract } = useDappContext();
 
 	const onRegister = async () => {
+		const delay = ms => new Promise(res => setTimeout(res, ms));
+		setIsLoading(true);
 		try {
 			const result = await contract.methods.registerAssociation(name).send();
+			await delay(5000);
 			const confirmation = await result.confirmation(1);
+			console.log("Success incription");
+			router.push("/dashboard");
+			setIsLoading(false);
 		} catch (e) {
+			setIsLoading(false);
 			console.error("Error: ", e);
 		}
 	};

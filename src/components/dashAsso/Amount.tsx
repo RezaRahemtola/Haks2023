@@ -1,8 +1,8 @@
 import Button from "@/src/components/Button";
 import { useDappContext } from "@/src/contexts/dapp";
+import claimGifts from "@/src/utils/claimGifts";
 import convertTezosToUsd from "@/src/utils/convert";
 import getBalanceAssociation from "@/src/utils/getBalanceAssociation";
-import claimGifts from "@/src/utils/claimGifts";
 import { Text, VStack } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
@@ -35,10 +35,6 @@ const AmountWithdraw = () => {
   }, [value]);
 
   const onClaimGifts = async () => {
-    // recupere la variable association avec en clé l'addresse du wallet de l'association
-    // si il y a une valeur c'est bien qu'elle est register
-    // Je recupère le svalueInDollarsmart contract et je claim le gift
-
     const contractAddress = storage.associations.get(address);
     if (contractAddress === undefined) return;
     const contract = await Tezos.wallet.at(contractAddress);
