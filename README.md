@@ -2,19 +2,20 @@
 
 # Stake & Share
 
-Stake & Share is a platform allowing people to make automatic donations to their favorite associations and charity organisations, without having to spend money.
+Stake & Share is a platform allowing people to make automatic donations to their favorite charities and NGOs, without having to spend money.
 
-The project is based on the *Tezos* blockchain, allowing donators to use a process named staking to delegate their tokens to a baker, who will generate an income from it. This income will then be redistributed to the associations chosen by the donator, allowing them to receive donations without the donator having to spend money.
 
 ## How does it work?
 
-Stake & Share allows associations to create a profile on the platform, which will then be displayed to donators who can delegate Tezos tokens to them, generating an income for the association.
+The project is based on [the *Tezos* blockchain](https://tezos.com/), allowing donators to use a process named staking to delegate their tokens to a baker that will generate an income from it. This income will then be redistributed to the charities chosen by the donator, allowing them to receive donations without the donator having to spend money.
+
+Stake & Share allows charities to create a profile on the platform, which will then be displayed to donators who can delegate XTZ tokens to them to generate an income.
 
 The tokens delegated by the donators are not given to the association, and can be withdrawn **at any time**. The association will receive rewards based on the amount of tokens delegated to them, and how much time they are delegated.
 
 ## Getting Started
 
-As a user of Stake & Share, the application can be accessed through this [MVP](lien vercel ici) link.
+As a user of Stake & Share, the application can be accessed through this [deployed MVP](https://stakeandshare.vercel.app/), which is using [this smart contract](https://better-call.dev/ghostnet/KT1X6hsvENH3ZfYuVoV8YSjsMjq7zALZoeCZ/operations)
 
 If you want to run the project locally, please follow the instructions below.
 
@@ -26,7 +27,7 @@ In order to run the project locally, you will need to install the following depe
 - [Octez-client](https://tezos.gitlab.io/introduction/howtoget.html#installing-the-tezos-client)
 - [Ligo](https://ligolang.org/docs/intro/installation/)
 
-> :bulb: To test the project, we recommend using the Tezos ghostnet. You can find more information about it [here](https://tezos.gitlab.io/introduction/test_networks.html)
+> 💡 To test the project, we recommend using the [Tezos ghostnet](https://ghostnet.tzkt.io/). You can find more information about it [here](https://tezos.gitlab.io/introduction/test_networks.html)
 
 ## Quickstart
 
@@ -34,32 +35,31 @@ There is two main steps to launch the project:
 
 ### I. Deploy the smart contract
 
-Stake & Share has its own smart contract, written in LigoJS.
-Here is a command to execute to compile and deploy it:
+Stake & Share has its own smart contract, written in [JSLigo](https://ligolang.org/?lang=jsligo).
+Here is a command to compile and deploy it:
 
 ```bash
 make -C contract/ && make -C contract/ deploy
 ```
 
-> :bulb: You can use [better-call dev](https://better-call.dev/) to track your smart contract.
+> 💡 You can use [better-call.dev](https://better-call.dev/) to track your smart contract.
 
 ### II. Run the application
 
 Now that the smart contract is deployed, you can run the application using docker.
 
-In order to do so, you will need to create a `.env` file at the root of the project, containing the following variables:
-
+In order to do so, you will need to create an `.env` file at the root of the project, containing the following variables:
 ```
-CONTRACT_ADDRESS=<your smart contract address>
+NEXT_PUBLIC_CONTRACT_ADDRESS=<your smart contract address>
 ```
 
-Then, you can run the application using the following command:
-
+Then, you can run the application using the following commands:
 ```bash
-docker build . -t stake-and-share:latest && docker run -p 3000:3000 stake-and-share:latest
+docker build . -t stake-and-share:latest
+docker run -p 3000:3000 stake-and-share:latest
 ```
 
-Finally, you can access to your application using [this link](http://localhost:3000) !
+Finally, you can access to your application using [this link](http://localhost:3000) 🚀
 
 ## Usage
 
@@ -69,15 +69,15 @@ The first step is to connect your wallet to the application. You can do so by cl
 
 ### Donators
 
-As a donator, the application will display a list of associations, allowing you to choose which one you want to support.
+As a donator, the application will display a list of charities, allowing you to choose which one you want to support.
 
-Once you have chosen an association, you can click on the **Support** button, which will open a modal allowing you to choose the amount of tokens you want to stake.
+Once you have chosen an charity, you can click on the **Support** button, which will open a modal allowing you to choose the amount of tokens you want to stake.
 
-As mentioned before, the tokens you deposit through the applications **are not** given to the association, and you can withdraw them at any time, partially or totally using the **Withdraw** button.
+As mentioned before, the tokens you deposit through the applications **are not** given to the charity, and you can withdraw them at any time, partially or totally using the **Withdraw** button.
 
-### Associations
+### Charities
 
-As an association, you can create a profile on the platform, which will be displayed to donators. After connecting your wallet, you can click on the *Start as charity* button, which will open a modal allowing you to specify your information. 
+As a charity, you can create a profile on the platform, which will be displayed to donators. After connecting your wallet, you can click on the *Start as charity* button, which will open a modal allowing you to specify your information. 
 
 > For now, only the name is required, but this might change in the near future.
 
