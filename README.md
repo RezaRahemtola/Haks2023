@@ -28,7 +28,7 @@ In order to run the project locally, you will need to install the following depe
 
 > :bulb: To test the project, we recommend using the Tezos ghostnet. You can find more information about it [here](https://tezos.gitlab.io/introduction/test_networks.html)
 
-### Quickstart
+## Quickstart
 
 There is two main steps to launch the project:
 
@@ -59,9 +59,9 @@ Then, you can run the application using the following command:
 docker build . -t stake-and-share:latest && docker run -p 3000:3000 stake-and-share:latest
 ```
 
-Finally, you can access to your application using [http://localhost:3000](this link) !
+Finally, you can access to your application using [this link](http://localhost:3000) !
 
-### Usage
+## Usage
 
 The application is divided in two parts, depending on whether you are a donator or an association.
 
