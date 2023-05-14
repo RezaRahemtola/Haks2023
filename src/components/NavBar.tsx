@@ -23,7 +23,7 @@ const NavBar = () => {
 					size="2xl"
 					variant="gradient"
 				>
-					HAKS 2023
+					Stake & Share
 				</Text>
 
 				{pathname === "/" && connected ? (

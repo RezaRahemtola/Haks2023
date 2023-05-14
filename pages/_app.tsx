@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
 	useEffect(() => {
 		(async () => {
 			const w = new BeaconWallet({
-				name: "Haks 2023",
+				name: "Stake & Share",
 				preferredNetwork: NetworkType.GHOSTNET,
 				disableDefaultEvents: true, // Disable all events / UI. This also disables the pairing alert.
 				eventHandlers: {
@@ -62,11 +62,8 @@ export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<>
 			<Head>
-				<title>Haks 2023</title>
-				<meta
-					name="description"
-					content="A distributed cloud built on top of Aleph, the next generation network of distributed big data applications."
-				/>
+				<title>Stake & Share</title>
+				<meta name="description" content="Finance charities while maintaining purchasing power." />
 				<meta charSet="UTF-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			</Head>
