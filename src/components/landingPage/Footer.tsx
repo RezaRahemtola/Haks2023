@@ -1,18 +1,8 @@
-import {
-	Box,
-	HStack,
-	Icon,
-	Stack,
-	Text,
-	useBreakpointValue,
-	useColorMode,
-	useColorModeValue,
-	VStack,
-} from "@chakra-ui/react";
+import { Box, HStack, Icon, Text, useBreakpointValue, useColorMode, useColorModeValue, VStack } from "@chakra-ui/react";
 
 import colors from "@/src/theme/foundations/colors";
 import { textColorMode } from "@/src/config/colorMode";
-import { DiscordLogo, GithubLogo, LinkedInLogo, PoCLogo } from "@/src/assets/icons/logos";
+import { GithubLogo, PoCLogo } from "@/src/assets/icons/logos";
 
 const Footer = () => {
 	const isMobile: boolean = useBreakpointValue({ base: true, sm: false }) || false;
@@ -46,35 +36,16 @@ const Footer = () => {
 			</Text>
 			{isMobile ? (
 				<>
-					<VStack spacing="24px">
-						<VStack spacing="4px">
-							<Text size="boldLg" color={textColor}>
-								Contribute with us on{" "}
+					<VStack spacing="4px">
+						<Text size="boldLg" color={textColor}>
+							Contribute with us on{" "}
+						</Text>
+						<HStack>
+							<Icon as={GithubLogo} w="20px" h="auto" color={textColor} />
+							<Text size="boldLg" variant="gradient">
+								<a href="https://github.com/RezaRahemtola/Haks2023">@RezaRahemtola/Haks2023</a>
 							</Text>
-							<HStack>
-								<Icon as={GithubLogo} w="20px" h="auto" color={textColor} />
-								<Text size="boldLg" variant="gradient">
-									@PoCInnovation
-								</Text>
-							</HStack>
-						</VStack>
-						<VStack spacing="4px">
-							<Text size="boldLg" color={textColor}>
-								Join us
-							</Text>
-							<HStack>
-								<Icon as={DiscordLogo} w="20px" h="auto" color={textColor} />
-								<Text size="boldLg" variant="gradient">
-									@PoC - Community
-								</Text>
-							</HStack>
-							<HStack>
-								<Icon as={LinkedInLogo} w="20px" h="auto" color={textColor} />
-								<Text size="boldLg" variant="gradient">
-									@pocinnovation
-								</Text>
-							</HStack>
-						</VStack>
+						</HStack>
 					</VStack>
 					<VStack spacing="4px">
 						<Text size="boldXl" color={textColor}>
@@ -90,36 +61,17 @@ const Footer = () => {
 				</>
 			) : (
 				<>
-					<VStack spacing="24px">
-						<HStack>
-							<Text size="boldXl" color={textColor}>
-								Contribute with us on{" "}
-							</Text>
-							<Icon as={GithubLogo} w="20px" h="auto" color={textColor} />
-							<Text size="boldXl" variant="gradient">
-								@PoCInnovation
-							</Text>
-						</HStack>
-						<HStack>
-							<Stack spacing="4px">
-								<HStack>
-									<Text size="boldLg" color={textColor}>
-										Join us
-									</Text>
-									<Icon as={DiscordLogo} w="20px" h="auto" color={textColor} />
-									<Text size="boldLg" variant="gradient">
-										@PoC - Community
-									</Text>
-								</HStack>
-								<HStack pl="66px">
-									<Icon as={LinkedInLogo} w="20px" h="auto" color={textColor} />
-									<Text size="boldLg" variant="gradient">
-										@pocinnovation
-									</Text>
-								</HStack>
-							</Stack>
-						</HStack>
-					</VStack>
+					<HStack>
+						<Text size="boldXl" color={textColor}>
+							Contribute with us on{" "}
+						</Text>
+						<Icon as={GithubLogo} w="20px" h="auto" color={textColor} />
+						<Text size="boldXl" variant="gradient">
+							<a href="https://github.com/RezaRahemtola/Haks2023" target="_blank">
+								@RezaRahemtola/Haks2023
+							</a>
+						</Text>
+					</HStack>
 					<HStack spacing="12px">
 						<Text size="3xl" color={textColor}>
 							Made by the

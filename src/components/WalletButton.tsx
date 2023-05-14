@@ -1,34 +1,68 @@
-import React from "react";
-import { IoRocketSharp } from "react-icons/io5";
-import { useAccountPkh, useConnect, useReady, useWallet } from "@/src/lib/dappstate";
-import { NETWORK } from "@/src/lib/settings";
-import Button from "./Button";
+import React, { Dispatch, SetStateAction } from "react";
+import { BeaconWallet } from "@taquito/beacon-wallet";
+import { FaWallet } from "react-icons/fa";
+import Button from "@/src/components/Button";
+import { useDappContext } from "@/src/contexts/dapp";
+import { NetworkType } from "@airgap/beacon-dapp";
+import { useRouter } from "next/router";
+import { IoMdLogOut } from "react-icons/io";
 
-const WalletButton = () => {
-	const ready = useReady();
-	const wallet = useWallet();
-	const acc = useAccountPkh();
-	const connect = useConnect();
-	const handleConnect = React.useCallback(async () => {
+type ButtonProps = {
+	setConnected: Dispatch<SetStateAction<boolean>>;
+	wallet: BeaconWallet;
+	setUserAddress: Dispatch<SetStateAction<string>>;
+};
+
+const ConnectButton = ({ setConnected, wallet, setUserAddress }: ButtonProps) => {
+	const { connected, address } = useDappContext();
+	const router = useRouter();
+
+	const setup = async (userAddress: string): Promise<void> => {
+		setUserAddress(userAddress);
+	};
+	const connectWallet = async (): Promise<void> => {
 		try {
-			await connect(NETWORK);
-		} catch (err: any) {
-			alert(err.message);
+			await wallet.requestPermissions({
+				network: {
+					type: NetworkType.GHOSTNET,
+					rpcUrl: "https://ghostnet.ecadinfra.com",
+				},
+			});
+			// gets user's address
+			const userAddress = await wallet.getPKH();
+			await setup(userAddress);
+			setConnected(true);
+		} catch (error) {
+			console.error(error);
 		}
-	}, [connect]);
+	};
 
-	if (ready) {
-		return <p>{acc}</p>;
+	const disconnectWallet = async (): Promise<void> => {
+		await router.push("/");
+		if (wallet) {
+			await wallet.clearActiveAccount();
+		}
+		setUserAddress("");
+		setConnected(false);
+	};
+
+	if (connected) {
+		return (
+			<>
+				<div>
+					<Button variant="secondary" buttonType="left-icon" icon={FaWallet} isTruncated>
+						{address.slice(0, 5)}..{address.substring(address.length - 3)}
+					</Button>
+					<Button variant="secondary" buttonType="left-icon" icon={IoMdLogOut} isTruncated onClick={disconnectWallet} />
+				</div>
+			</>
+		);
 	}
-	return wallet ? (
-		<Button variant="special" buttonType="left-icon" icon={IoRocketSharp} onClick={handleConnect}>
-			Connect to wallet
+	return (
+		<Button variant="secondary" buttonType="left-icon" icon={FaWallet} onClick={connectWallet}>
+			Connect
 		</Button>
-	) : (
-		<a href="https://templewallet.com/" rel="noopener">
-			<Button>Install Temple</Button>
-		</a>
 	);
 };
 
-export default WalletButton;
+export default ConnectButton;

@@ -2,7 +2,7 @@ import { VStack } from "@chakra-ui/react";
 
 import Footer from "@/src/components/landingPage/Footer";
 import HeadingSection from "@/src/components/landingPage/HeadingSection";
-import NavBar from "@/src/components/landingPage/NavBar";
+import NavBar from "@/src/components/NavBar";
 import PartnersSection from "@/src/components/landingPage/PartnersSection";
 import ServicesSection from "@/src/components/landingPage/ServicesSection";
 

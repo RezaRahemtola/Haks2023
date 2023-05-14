@@ -1,9 +1,7 @@
 import { Box, Img, Text, useBreakpointValue, useColorModeValue, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
-import { IoRocketSharp } from "react-icons/io5";
 
-import Button from "@/src/components/Button";
 import { textColorMode } from "@/src/config/colorMode";
 import colors from "@/src/theme/foundations/colors";
 
@@ -16,8 +14,9 @@ const HeadingSection = () => {
 	return (
 		<VStack w="100%" spacing="64px" textAlign="center">
 			<VStack spacing="32px" w={{ base: "300px", sm: "550px", md: "600px", lg: "1000px" }}>
-				<Text size={isMobile ? "4xl" : "7xl"} id="ipc-landing-headline" color={textColor}>
-				Finance charities while maintaining 					<Box
+				<Text size={isMobile ? "4xl" : "7xl"} color={textColor}>
+					Finance charities while maintaining{" "}
+					<Box
 						as="span"
 						backgroundImage={`linear-gradient(135deg, ${colors.blue[900]} 0%, ${colors.red[900]} 100%)`}
 						bgClip="text"
@@ -26,29 +25,17 @@ const HeadingSection = () => {
 					</Box>{" "}
 					.
 				</Text>
-				<Text size="xl" maxW="512px" id="ipc-landing-subHeadline" color={textColor}>
-				The platform connecting charities and donors to allow them to stack their XTZ for the benefit of{" "}
+				<Text size="xl" maxW="512px" color={textColor}>
+					The platform connecting charities and donors to allow them to stack their XTZ for the benefit of{" "}
 					<Box as="span" fontWeight="700">
-					solidarity
+						solidarity
 					</Box>{" "}
 					.
 				</Text>
 			</VStack>
-			<Button
-				variant="special"
-				size={isMobile ? "xl" : "2xl"}
-				buttonType="left-icon"
-				icon={IoRocketSharp}
-				onClick={() => {
-					router.push("/connection");
-				}}
-				id="ipc-landing-heading-start-button"
-			>
-				Login
-			</Button>
 			{!isMobile && (
 				<>
-					<Box as="div" position="absolute" top="75px" left="0px" w="600px" zIndex={-10}>
+					<Box as="div" position="absolute" top="60px" left="0px" w="600px" zIndex={-10}>
 						<Img
 							src="/assets/meshes/blue-ellipse.svg"
 							w="600px"
