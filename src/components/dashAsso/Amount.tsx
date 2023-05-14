@@ -15,6 +15,8 @@ const AmountWithdraw = () => {
 		const fetchData = async () => {
 			const fetchedValue = await getBalanceAssociation(storage, Tezos, address);
 			if (fetchedValue === undefined) return;
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			setValue(fetchedValue);
 		};
 
