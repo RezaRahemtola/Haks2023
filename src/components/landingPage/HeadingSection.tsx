@@ -1,9 +1,7 @@
 import { Box, Img, Text, useBreakpointValue, useColorModeValue, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
-import { IoRocketSharp } from "react-icons/io5";
 
-import Button from "@/src/components/Button";
 import { textColorMode } from "@/src/config/colorMode";
 import colors from "@/src/theme/foundations/colors";
 
@@ -35,20 +33,9 @@ const HeadingSection = () => {
 					.
 				</Text>
 			</VStack>
-			<Button
-				variant="special"
-				size={isMobile ? "xl" : "2xl"}
-				buttonType="left-icon"
-				icon={IoRocketSharp}
-				onClick={() => {
-					router.push("/connection");
-				}}
-			>
-				Login
-			</Button>
 			{!isMobile && (
 				<>
-					<Box as="div" position="absolute" top="75px" left="0px" w="600px" zIndex={-10}>
+					<Box as="div" position="absolute" top="60px" left="0px" w="600px" zIndex={-10}>
 						<Img
 							src="/assets/meshes/blue-ellipse.svg"
 							w="600px"

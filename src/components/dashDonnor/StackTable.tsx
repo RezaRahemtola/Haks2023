@@ -12,17 +12,16 @@ import {
 	Thead,
 	Tr,
 	useDisclosure,
-	useToast,
+	useToast
 } from "@chakra-ui/react";
 import { useState } from "react";
 
 import Button from "@/src/components/Button";
 import Modal from "@/src/components/Modal";
+import { useDappContext } from "@/src/contexts/dapp";
 import { FrontAssociation } from "@/src/types/types";
 import supportAssociation from "@/src/utils/supportAssociation";
-import { useDappContext } from "@/src/contexts/dapp";
-import withdrawStake from "@/src/utils/withdrawStake";
-import getDonatorSupportedAssociations from "@/src/utils/getDonatorSupportedAssociations";
+import { useRouter } from "next/router";
 
 type StackTableProps = {
 	values: FrontAssociation[];
@@ -35,12 +34,16 @@ const HandleSupport = ({ association }: { association: FrontAssociation }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { storage, address, Tezos } = useDappContext();
 	const [amount, setAmount] = useState(0);
+	const router = useRouter();
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmitSupport = async () => {
+		setIsLoading(true);
 		await supportAssociation(association, amount, Tezos);
+		setIsLoading(false);
 		onClose();
 		toast({ title: `Successfully delegating ${amount} XTZ to ${association?.name}`, status: "success" });
-		await getDonatorSupportedAssociations(storage, address, Tezos);
+		router.reload(window.location.pathname);
 	};
 
 	return (
@@ -53,7 +56,7 @@ const HandleSupport = ({ association }: { association: FrontAssociation }) => {
 				onClose={onClose}
 				title="Support charity"
 				CTA={
-					<Button variant="primary" size="lg" onClick={handleSubmitSupport}>
+					<Button isLoading={isLoading} variant="primary" size="lg" onClick={handleSubmitSupport}>
 						OK
 					</Button>
 				}

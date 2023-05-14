@@ -2,8 +2,8 @@ import { Box, Img, Stack, Text, useBreakpointValue, useColorMode, useColorModeVa
 
 import { textColorMode } from "@/src/config/colorMode";
 import colors from "@/src/theme/foundations/colors";
-import { IoWalletOutline } from "react-icons/io5";
 import { useRouter } from "next/router";
+import { IoWalletOutline } from "react-icons/io5";
 import Button from "../Button";
 import ServicesCard from "../serviceCard";
 
@@ -48,7 +48,7 @@ const ServicesSection = (): JSX.Element => {
 						buttonType="left-icon"
 						icon={IoWalletOutline}
 						onClick={() => {
-							router.push("/register/donor");
+							router.push("/dashboard");
 						}}
 					>
 						Start as donor
