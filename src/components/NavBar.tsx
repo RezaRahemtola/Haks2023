@@ -22,7 +22,6 @@ const NavBar = () => {
 					}}
 					size="2xl"
 					variant="gradient"
-					id="ipc-landing-navigation-name"
 				>
 					HAKS 2023
 				</Text>

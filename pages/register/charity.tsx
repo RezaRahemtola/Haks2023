@@ -49,7 +49,6 @@ const ConnectionCharity = (): JSX.Element => {
 					style={{ cursor: "pointer" }}
 					size="2xl"
 					variant="gradient"
-					id="haks2023-landing-navigation-name"
 					onClick={() => {
 						router.push("/");
 					}}
@@ -58,7 +57,7 @@ const ConnectionCharity = (): JSX.Element => {
 				</Text>
 			</VStack>
 			<VStack w={{ base: "300px", md: "650px", lg: "750px", "2xl": "1000px" }}>
-				<Text size="7xl" variant="gradient" textAlign="center" id="ipc-landing-navigation-name">
+				<Text size="7xl" variant="gradient" textAlign="center">
 					Start as a charity
 				</Text>
 			</VStack>
@@ -82,13 +81,7 @@ const ConnectionCharity = (): JSX.Element => {
 				onClose={onClose}
 				title="Enter the charity name"
 				CTA={
-					<Button
-						variant="primary"
-						size="lg"
-						isLoading={isLoading}
-						id="Haks2023-dashboard-update-programName-button"
-						onClick={onRegister}
-					>
+					<Button variant="primary" size="lg" isLoading={isLoading} onClick={onRegister}>
 						OK
 					</Button>
 				}

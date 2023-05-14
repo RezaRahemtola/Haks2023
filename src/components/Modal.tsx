@@ -31,7 +31,7 @@ const Modal = ({ isOpen, onClose, title, children, CTA }: ModalProps): JSX.Eleme
 		<UIModal isOpen={isOpen} onClose={onClose} size="2xl">
 			<ModalOverlay />
 			<ModalContent borderRadius="16px" p="24px 32px" bg={bgColor}>
-				<ModalCloseButton id="ipc-modal-close-button" />
+				<ModalCloseButton />
 				<ModalHeader p="0px">
 					<VStack w="100%" align="start">
 						<Text size="2xl" color={textColor}>

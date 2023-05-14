@@ -6,13 +6,11 @@ const ServicesCard = ({
 	title,
 	description,
 	icon,
-	id,
 	position,
 }: {
 	title: string;
 	description: string;
 	icon: string;
-	id: string;
 	position: "left" | "right";
 }) => (
 	<VStack
@@ -24,18 +22,15 @@ const ServicesCard = ({
 		filter={`drop-shadow(4px 4px 4px ${position === "left" ? "#FF003625" : "#0027FF25"})`}
 		w={{ base: "250px", sm: "425px" }}
 		textAlign="center"
-		id={id}
 	>
 		<VStack bg="blue.50" borderRadius="12px" p={{ base: "32px 24px", sm: "64px 24px" }} spacing="48px">
 			<VStack spacing="24px">
 				<Img src={icon} />
-				<Text variant={`${position === "left" ? "gradient" : "reverseGradient"}`} size="2xl" id={`${id}-title`}>
+				<Text variant={`${position === "left" ? "gradient" : "reverseGradient"}`} size="2xl">
 					{title}
 				</Text>
 			</VStack>
-			<Text size="xl" id={`${id}-description`}>
-				{description}
-			</Text>
+			<Text size="xl">{description}</Text>
 		</VStack>
 	</VStack>
 );

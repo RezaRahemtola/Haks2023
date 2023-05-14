@@ -14,7 +14,6 @@ const ServicesSection = (): JSX.Element => {
 	const { colorMode } = useColorMode();
 	const router = useRouter();
 
-	
 	return (
 		<VStack
 			spacing="72px"
@@ -25,15 +24,8 @@ const ServicesSection = (): JSX.Element => {
 			position="relative"
 			boxShadow={`0px 0px 128px ${colorMode === "light" ? colors.blue[100] : colors.gray[700]}`}
 		>
-			<Text
-				size="4xl"
-				zIndex={10}
-				textAlign="center"
-				w={{ base: "300px", md: "500px", lg: "100%" }}
-				id="ipc-landing-services-title"
-				color={textColor}
-			>
-				Our project is {" "}
+			<Text size="4xl" zIndex={10} textAlign="center" w={{ base: "300px", md: "500px", lg: "100%" }} color={textColor}>
+				Our project is{" "}
 				<Box
 					as="span"
 					bgGradient={`linear-gradient(135deg, ${colors.blue[900]} 0%, ${colors.red[900]} 100%)`}
@@ -49,7 +41,6 @@ const ServicesSection = (): JSX.Element => {
 						description="Donors don't lose purchasing power when donating to charities"
 						icon="/assets/icons/people.svg"
 						position="left"
-						id="ipc-landing-services-cloud-storage"
 					/>
 					<Button
 						variant="special"
@@ -69,7 +60,6 @@ const ServicesSection = (): JSX.Element => {
 						description="Charities become more attractive to donors"
 						icon="/assets/icons/solidarity.svg"
 						position="right"
-						id="ipc-landing-services-cloud-computing"
 					/>
 					<Button
 						variant="special"

@@ -21,6 +21,8 @@ import Modal from "@/src/components/Modal";
 import { FrontAssociation } from "@/src/types/types";
 import supportAssociation from "@/src/utils/supportAssociation";
 import { useDappContext } from "@/src/contexts/dapp";
+import withdrawStake from "@/src/utils/withdrawStake";
+import getDonatorSupportedAssociations from "@/src/utils/getDonatorSupportedAssociations";
 
 type StackTableProps = {
 	values: FrontAssociation[];
@@ -31,13 +33,14 @@ type StackTableProps = {
 const HandleSupport = ({ association }: { association: FrontAssociation }) => {
 	const toast = useToast({ duration: 2000, isClosable: true });
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { contract, Tezos } = useDappContext();
+	const { storage, address, Tezos } = useDappContext();
 	const [amount, setAmount] = useState(0);
 
 	const handleSubmitSupport = async () => {
 		await supportAssociation(association, amount, Tezos);
 		onClose();
 		toast({ title: `Successfully delegating ${amount} XTZ to ${association?.name}`, status: "success" });
+		await getDonatorSupportedAssociations(storage, address, Tezos);
 	};
 
 	return (
@@ -71,6 +74,22 @@ const HandleSupport = ({ association }: { association: FrontAssociation }) => {
 	);
 };
 
+const HandleWithdraw = ({ association }: { association: FrontAssociation }) => {
+	const toast = useToast({ duration: 2000, isClosable: true });
+	const { Tezos } = useDappContext();
+
+	const handleWithdraw = async () => {
+		await withdrawStake(association.contract, Tezos);
+		toast({ title: `Withdraw success from ${association.name}`, status: "success" });
+	};
+
+	return (
+		<Button variant="special" size="xl" buttonType="left-icon" onClick={handleWithdraw}>
+			Withdraw
+		</Button>
+	);
+};
+
 const Content = ({ values, isSupport, isWithdraw }: StackTableProps) => (
 	<>
 		<TableContainer width={700} mt={10}>
@@ -99,9 +118,7 @@ const Content = ({ values, isSupport, isWithdraw }: StackTableProps) => (
 								{isSupport ? (
 									<HandleSupport association={association} />
 								) : isWithdraw ? (
-									<Button variant="special" size="xl" buttonType="left-icon">
-										Withdraw
-									</Button>
+									<HandleWithdraw association={association} />
 								) : (
 									<></>
 								)}
