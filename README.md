@@ -1,6 +1,6 @@
-# Haks 2023
+# Haks 2023 - Stake & Share
 
-# Stake & Share
+![logo](/.github/assets/logo.png)
 
 Stake & Share is a platform allowing people to make automatic donations to their favorite charities and NGOs, without having to spend money.
 
