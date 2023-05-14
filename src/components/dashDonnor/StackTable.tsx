@@ -12,7 +12,7 @@ import {
 	Thead,
 	Tr,
 	useDisclosure,
-	useToast
+	useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -22,6 +22,7 @@ import { useDappContext } from "@/src/contexts/dapp";
 import { FrontAssociation } from "@/src/types/types";
 import supportAssociation from "@/src/utils/supportAssociation";
 import { useRouter } from "next/router";
+import withdrawStake from "@/src/utils/withdrawStake";
 
 type StackTableProps = {
 	values: FrontAssociation[];
@@ -43,7 +44,7 @@ const HandleSupport = ({ association }: { association: FrontAssociation }) => {
 		setIsLoading(false);
 		onClose();
 		toast({ title: `Successfully delegating ${amount} XTZ to ${association?.name}`, status: "success" });
-		router.reload(window.location.pathname);
+		router.reload();
 	};
 
 	return (
@@ -80,10 +81,12 @@ const HandleSupport = ({ association }: { association: FrontAssociation }) => {
 const HandleWithdraw = ({ association }: { association: FrontAssociation }) => {
 	const toast = useToast({ duration: 2000, isClosable: true });
 	const { Tezos } = useDappContext();
+	const router = useRouter();
 
 	const handleWithdraw = async () => {
 		await withdrawStake(association.contract, Tezos);
-		toast({ title: `Withdraw success from ${association.name}`, status: "success" });
+		// toast({ title: `Withdraw success from ${association.name}`, status: "success" });
+		router.reload();
 	};
 
 	return (
