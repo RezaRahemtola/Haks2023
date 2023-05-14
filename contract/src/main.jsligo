@@ -59,6 +59,11 @@ const getFeePercentage = ([_, store]: [unit, storage]): nat => {
     return store.feePercentage;
 };
 
+// @view
+const getOwnerAddress = ([_, store]: [unit, storage]): address => {
+    return store.ownerAddress;
+};
+
 const main = (action: parameters, store: storage) : return_ => {
   return match (action, {
         RegisterAssociation: (p: Parameters.register_association) => registerAssociation(p, store),

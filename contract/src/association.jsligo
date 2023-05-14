@@ -5,7 +5,7 @@ type parameters = Parameters.association_parameters;
 type storage = Storage.association_storage;
 type return_ = [list<operation>, storage];
 
-// 
+//
 // FIXME: This code is rigged because of the lack of support of
 // external variables using Tezos.create_contract().
 //
@@ -50,7 +50,7 @@ export const createSubcontract = (baker: key_hash, name: string): [operation, ad
             failwith("You don't have enough stake to withdraw this amount");
           }
 
-          let new_total = s.totalStaked - amount_staked;
+          let new_total = s.totalStaked - p.amount;
           let donator_stake = amount_staked - p.amount;
 
           return [list([
@@ -69,13 +69,15 @@ export const createSubcontract = (baker: key_hash, name: string): [operation, ad
           let donator = Big_map.find_opt(Tezos.get_sender(), s.donators);
           if (Option.is_none(donator)) {
             failwith("You have nothing to withdraw");
+          } else if (Option.unopt(donator) == (0 as tez)) {
+            failwith("You have nothing to withdraw");
           }
 
           let amount_staked = Option.unopt(donator);
           let new_total = s.totalStaked - amount_staked;
 
           return [list([
-            Tezos.transaction(unit, Tezos.get_balance(), Tezos.get_contract_with_error(Tezos.get_sender(), "Invalid address"))
+            Tezos.transaction(unit, amount_staked, Tezos.get_contract_with_error(Tezos.get_sender(), "Invalid address"))
           ]), {...s,
             totalStaked: Option.is_some(new_total) ? Option.unopt(new_total) : 0 as tez,
             donators: Big_map.update(Tezos.get_sender(), None(), s.donators)
@@ -90,20 +92,32 @@ export const createSubcontract = (baker: key_hash, name: string): [operation, ad
           let rewards = Tezos.get_balance() - s.totalStaked;
           if (Option.is_none(rewards)) {
             failwith("You have no rewards to claim");
+          } else if (Option.unopt(rewards) == (0 as tez)) {
+            failwith("You have no rewards to claim");
           }
 
+          let feeAddressOpt: option<address> = Tezos.call_view("getOwnerAddress", unit, s.parentContract);
           let percentageOpt: option<nat> = Tezos.call_view("getFeePercentage", unit, s.parentContract);
           let percentage = Option.is_some(percentageOpt) ? Option.unopt(percentageOpt) : 0 as nat;
           
-          let fee: tez = percentage * Option.unopt(rewards) / (100 as nat);
+          let fee: tez = Option.unopt(rewards) * percentage / (100 as nat);
           let finalRewards = Option.unopt(rewards) - fee;
           if (Option.is_none(finalRewards)) {
             failwith("You have no rewards to claim");
+          } else if (Option.unopt(finalRewards) == (0 as tez)) {
+            failwith("You have no rewards to claim");
           }
-          return [list([
-            Tezos.transaction(unit, Option.unopt(finalRewards), Tezos.get_contract_with_error(Tezos.get_sender(), "Invalid address")),
-            Tezos.transaction(unit, fee, Tezos.get_contract_with_error(s.parentContract, "Invalid address"))
-          ]), {...s}];
+
+          let operations: list<operation> = list([
+            Tezos.transaction(unit, Option.unopt(finalRewards), Tezos.get_contract_with_error(Tezos.get_sender(), "Invalid address"))
+          ]);
+          if (fee > (0 as tez) && Option.is_some(feeAddressOpt)) {
+            operations = list([
+              Tezos.transaction(unit, fee, Tezos.get_contract_with_error(Option.unopt(feeAddressOpt), "Invalid fee address")),
+              ...operations
+            ]);
+          }
+          return [operations, {...s}];
         },
 
         ChangeBaker: (p: Parameters.change_baker) => {
