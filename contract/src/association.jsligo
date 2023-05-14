@@ -1,0 +1,144 @@
+#import "parameters.jsligo" "Parameters"
+#import "storage.jsligo" "Storage"
+
+type parameters = Parameters.association_parameters;
+type storage = Storage.association_storage;
+type return_ = [list<operation>, storage];
+
+//
+// FIXME: This code is rigged because of the lack of support of
+// external variables using Tezos.create_contract().
+//
+
+export const createSubcontract = (baker: key_hash, name: string): [operation, address] => {
+  return Tezos.create_contract(
+    (p: Parameters.association_parameters, s: Storage.association_storage) => match (p, {
+        OfferStake: () => {
+          if (Tezos.get_amount() == (0 as tez)) {
+            failwith("The transaction is empty");
+          } else if (Tezos.get_sender() == s.ownerAddress) {
+            failwith("Associations cannot perform stake operations");
+          }
+
+          let donator = Big_map.find_opt(Tezos.get_sender(), s.donators);
+          let amount_staked = 0 as tez;
+
+          if (Option.is_some(donator)) {
+            amount_staked = Option.unopt(donator);
+          }
+          
+          return [list([]), {...s,
+            totalStaked: s.totalStaked + Tezos.get_amount(),
+            donators: Big_map.update(Tezos.get_sender(), Some(amount_staked + Tezos.get_amount()), s.donators)
+          }];
+        },
+
+        RetractStake: (p: Parameters.retract_stake) => {
+          if (Tezos.get_sender() == s.ownerAddress) {
+            failwith("Associations cannot perform stake operations");
+          } else if (p.amount == (0 as tez)) {
+            failwith("Invalid withdraw amount");
+          }
+
+          let donator = Big_map.find_opt(Tezos.get_sender(), s.donators);
+          if (Option.is_none(donator)) {
+            failwith("You have nothing to withdraw");
+          }
+
+          let amount_staked = Option.unopt(donator);
+          if (amount_staked < p.amount) {
+            failwith("You don't have enough stake to withdraw this amount");
+          }
+
+          let new_total = s.totalStaked - p.amount;
+          let donator_stake = amount_staked - p.amount;
+
+          return [list([
+            Tezos.transaction(unit, p.amount, Tezos.get_contract_with_error(Tezos.get_sender(), "Invalid address"))
+          ]), {...s,
+            totalStaked: Option.is_some(new_total) ? Option.unopt(new_total) : 0 as tez,
+            donators: Big_map.update(Tezos.get_sender(), donator_stake, s.donators)
+          }];
+        },
+
+        RetractAll: () => {
+          if (Tezos.get_sender() == s.ownerAddress) {
+            failwith("Associations cannot perform stake operations");
+          }
+
+          let donator = Big_map.find_opt(Tezos.get_sender(), s.donators);
+          if (Option.is_none(donator)) {
+            failwith("You have nothing to withdraw");
+          } else if (Option.unopt(donator) == (0 as tez)) {
+            failwith("You have nothing to withdraw");
+          }
+
+          let amount_staked = Option.unopt(donator);
+          let new_total = s.totalStaked - amount_staked;
+
+          return [list([
+            Tezos.transaction(unit, amount_staked, Tezos.get_contract_with_error(Tezos.get_sender(), "Invalid address"))
+          ]), {...s,
+            totalStaked: Option.is_some(new_total) ? Option.unopt(new_total) : 0 as tez,
+            donators: Big_map.update(Tezos.get_sender(), None(), s.donators)
+          }];
+        },
+
+        ClaimGifts: () => {
+          if (Tezos.get_sender() != s.ownerAddress) {
+            failwith("You are not the owner of the contract");
+          }
+
+          let rewards = Tezos.get_balance() - s.totalStaked;
+          if (Option.is_none(rewards)) {
+            failwith("You have no rewards to claim");
+          } else if (Option.unopt(rewards) == (0 as tez)) {
+            failwith("You have no rewards to claim");
+          }
+
+          let feeAddressOpt: option<address> = Tezos.call_view("getOwnerAddress", unit, s.parentContract);
+          let percentageOpt: option<nat> = Tezos.call_view("getFeePercentage", unit, s.parentContract);
+          let percentage = Option.is_some(percentageOpt) ? Option.unopt(percentageOpt) : 0 as nat;
+          
+          let fee: tez = Option.unopt(rewards) * percentage / (100 as nat);
+          let finalRewards = Option.unopt(rewards) - fee;
+          if (Option.is_none(finalRewards)) {
+            failwith("You have no rewards to claim");
+          } else if (Option.unopt(finalRewards) == (0 as tez)) {
+            failwith("You have no rewards to claim");
+          }
+
+          let operations: list<operation> = list([
+            Tezos.transaction(unit, Option.unopt(finalRewards), Tezos.get_contract_with_error(Tezos.get_sender(), "Invalid address"))
+          ]);
+          if (fee > (0 as tez) && Option.is_some(feeAddressOpt)) {
+            operations = list([
+              Tezos.transaction(unit, fee, Tezos.get_contract_with_error(Option.unopt(feeAddressOpt), "Invalid fee address")),
+              ...operations
+            ]);
+          }
+          return [operations, {...s}];
+        },
+
+        ChangeBaker: (p: Parameters.change_baker) => {
+          if (Tezos.get_sender() != s.ownerAddress) {
+            failwith("You are not the owner of the contract");
+          } else if (p.baker == s.baker) {
+            failwith("This address is already set as the baker");
+          }
+
+          return [
+            list([
+              Tezos.set_delegate(Some(p.baker))
+            ]), {...s, baker: p.baker}
+          ];
+        },
+    }), Some(baker), 0 as tez, {
+    name,
+    donators: Big_map.empty,
+    totalStaked: 0 as tez,
+    baker: baker,
+    ownerAddress: Tezos.get_sender(),
+    parentContract: Tezos.get_self_address(),
+  });
+}

@@ -1,0 +1,28 @@
+export type retract_stake = {
+  amount: tez
+};
+
+export type register_association = {
+  name: string,
+};
+
+export type change_owner = {
+  ownerAddress: address,
+};
+
+export type change_baker = {
+  baker: key_hash,
+};
+
+export type main_parameters =
+  ["RegisterAssociation", register_association]
+| ["ChangeOwner", change_owner]
+| ["ChangeBaker", change_baker]
+| ["ClaimFees"];
+
+export type association_parameters =
+  ["OfferStake"]
+| ["RetractStake", retract_stake]
+| ["RetractAll"]
+| ["ClaimGifts"]
+| ["ChangeBaker", change_baker];

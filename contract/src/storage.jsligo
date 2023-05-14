@@ -1,0 +1,15 @@
+export type main_storage = {
+  associations: map<address, address>,
+  feePercentage: nat,
+  baker: key_hash,
+  ownerAddress: address,
+};
+
+export type association_storage = {
+  name: string,
+  donators: big_map<address, tez>,
+  totalStaked: tez,
+  baker: key_hash,
+  ownerAddress: address,
+  parentContract: address,
+};
