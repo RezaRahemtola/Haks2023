@@ -1,5 +1,4 @@
 import { MichelsonMap } from "@taquito/taquito";
-import BigNumber from "bignumber.js";
 
 export type FrontAssociation = {
 	name: string;
@@ -10,7 +9,7 @@ export type FrontAssociation = {
 
 export type StorageData = {
 	associations: MichelsonMap<string, string>;
-	totalStaked: BigNumber;
+	totalStaked: number;
 };
 
 export type AssociationStorage = {

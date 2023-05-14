@@ -33,7 +33,7 @@ type StackTableProps = {
 const HandleSupport = ({ association }: { association: FrontAssociation }) => {
 	const toast = useToast({ duration: 2000, isClosable: true });
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { storage, address, Tezos } = useDappContext();
+	const { Tezos } = useDappContext();
 	const [amount, setAmount] = useState(0);
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
