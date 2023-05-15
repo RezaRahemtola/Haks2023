@@ -1,12 +1,9 @@
 import { Box, Img, Text, useBreakpointValue, useColorModeValue, VStack } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-
 
 import { textColorMode } from "@/src/config/colorMode";
 import colors from "@/src/theme/foundations/colors";
 
 const HeadingSection = () => {
-	const router = useRouter();
 	const isMobile: boolean = useBreakpointValue({ base: true, lg: false }) || false;
 
 	const textColor = useColorModeValue(textColorMode.light, textColorMode.dark);

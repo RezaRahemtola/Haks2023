@@ -12,10 +12,10 @@ const Dashboard = () => {
 	useEffect(() => {
 		(async () => {
 			if (!connected) {
-				router.push("/");
+				await router.push("/");
 			}
 		})();
-	}, []);
+	}, [connected, router]);
 
 	if (storage === undefined || !connected) {
 		return <Loader />;

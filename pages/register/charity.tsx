@@ -1,7 +1,3 @@
-import Button from "@/src/components/Button";
-import Modal from "@/src/components/Modal";
-import { textColorMode } from "@/src/config/colorMode";
-import { useDappContext } from "@/src/contexts/dapp";
 import {
 	Box,
 	FormControl,
@@ -14,11 +10,16 @@ import {
 	VStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, ReactElement, useEffect, useState } from "react";
+
 import { StorageData } from "@/src/types/types";
 import Loader from "@/src/components/Loader";
+import Button from "@/src/components/Button";
+import Modal from "@/src/components/Modal";
+import { textColorMode } from "@/src/config/colorMode";
+import { useDappContext } from "@/src/contexts/dapp";
 
-const ConnectionCharity = (): JSX.Element => {
+const ConnectionCharity = (): ReactElement => {
 	const isMobile: boolean = useBreakpointValue({ base: true, lg: false }) || false;
 	const textColor = useColorModeValue(textColorMode.light, textColorMode.dark);
 	const router = useRouter();
@@ -31,17 +32,20 @@ const ConnectionCharity = (): JSX.Element => {
 	useEffect(() => {
 		(async () => {
 			if (!connected) {
-				router.push("/");
+				await router.push("/");
 			}
 		})();
-	}, []);
+	}, [connected, router]);
 
 	if (!connected) {
 		return <Loader />;
 	}
 
 	const onRegister = async () => {
-		const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+		const delay = (ms: number) =>
+			new Promise((res) => {
+				setTimeout(res, ms);
+			});
 		setIsLoading(true);
 		try {
 			const result = await contract.methods.registerAssociation(name).send();
@@ -50,8 +54,7 @@ const ConnectionCharity = (): JSX.Element => {
 			const s: StorageData = await contract.storage();
 			setStorage(s);
 			await delay(1000);
-			router.push("/dashboard");
-			setIsLoading(false);
+			await router.push("/dashboard");
 		} catch (e) {
 			setIsLoading(false);
 			console.error("Error: ", e);
@@ -65,8 +68,8 @@ const ConnectionCharity = (): JSX.Element => {
 					style={{ cursor: "pointer" }}
 					size="2xl"
 					variant="gradient"
-					onClick={() => {
-						router.push("/");
+					onClick={async () => {
+						await router.push("/");
 					}}
 				>
 					HAKS 2023

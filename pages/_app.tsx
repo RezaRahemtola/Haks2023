@@ -53,7 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
 			setStorage(s);
 			setContract(c);
 		})();
-	}, []);
+	}, [Tezos]);
 
 	if (loading) {
 		return <Loader />;
