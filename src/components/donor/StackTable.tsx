@@ -112,38 +112,36 @@ const ActionHandler = ({ association, isSupport, isWithdraw }: ActionHandlerProp
 };
 
 const Content = ({ values, isSupport, isWithdraw }: StackTableProps) => (
-	<>
-		<TableContainer width={700} mt={10}>
-			<Table variant="simple">
-				<Thead>
-					<Tr>
-						<Th>Name</Th>
-						<Th isNumeric></Th>
+	<TableContainer width={700} mt={10}>
+		<Table variant="simple">
+			<Thead>
+				<Tr>
+					<Th>Name</Th>
+					<Th isNumeric></Th>
+				</Tr>
+			</Thead>
+			<Tbody>
+				{values.map((association, index) => (
+					<Tr key={index}>
+						<Td>
+							<Text size="xl">{association.name}</Text>
+							<Link href={`https://tzprofiles.com/view/ghostnet/${association.address}`} isExternal>
+								{association.address}
+							</Link>
+							{association.stackedAmount !== undefined ? (
+								<Text size="l">{association.stackedAmount} XTZ stacked</Text>
+							) : (
+								<></>
+							)}
+						</Td>
+						<Td isNumeric>
+							<ActionHandler association={association} isSupport={isSupport} isWithdraw={isWithdraw} />
+						</Td>
 					</Tr>
-				</Thead>
-				<Tbody>
-					{values.map((association, index) => (
-						<Tr key={index}>
-							<Td>
-								<Text size="xl">{association.name}</Text>
-								<Link href={`https://tzprofiles.com/view/ghostnet/${association.address}`} isExternal>
-									{association.address}
-								</Link>
-								{association.stackedAmount !== undefined ? (
-									<Text size="l">{association.stackedAmount} XTZ stacked</Text>
-								) : (
-									<></>
-								)}
-							</Td>
-							<Td isNumeric>
-								<ActionHandler association={association} isSupport={isSupport} isWithdraw={isWithdraw} />
-							</Td>
-						</Tr>
-					))}
-				</Tbody>
-			</Table>
-		</TableContainer>
-	</>
+				))}
+			</Tbody>
+		</Table>
+	</TableContainer>
 );
 
 const NoContent = () => (

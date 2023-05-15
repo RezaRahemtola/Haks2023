@@ -1,5 +1,5 @@
-import ListAssociation from "@/src/components/dashDonnor/ListAsso";
-import ListStack from "@/src/components/dashDonnor/ListStack";
+import ListAssociation from "@/src/components/donor/ListAsso";
+import ListStack from "@/src/components/donor/ListStack";
 import Footer from "@/src/components/landingPage/Footer";
 import NavBar from "@/src/components/NavBar";
 import colors from "@/src/theme/foundations/colors";

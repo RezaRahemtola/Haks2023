@@ -14,16 +14,17 @@ import {
 
 import colors from "@/src/theme/foundations/colors";
 import { bgColorMode, textColorMode } from "@/src/config/colorMode";
+import { ReactElement } from "react";
 
 type ModalProps = {
 	isOpen: boolean;
 	onClose: () => void;
 	title: string;
-	children: JSX.Element;
-	CTA?: JSX.Element;
+	children: ReactElement;
+	CTA?: ReactElement;
 };
 
-const Modal = ({ isOpen, onClose, title, children, CTA }: ModalProps): JSX.Element => {
+const Modal = ({ isOpen, onClose, title, children, CTA }: ModalProps) => {
 	const textColor = useColorModeValue(textColorMode.light, textColorMode.dark);
 	const bgColor = useColorModeValue(bgColorMode.light, bgColorMode.dark);
 

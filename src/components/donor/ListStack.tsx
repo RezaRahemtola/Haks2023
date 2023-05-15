@@ -3,7 +3,7 @@ import { useDappContext } from "@/src/contexts/dapp";
 import getDonatorSupportedAssociations from "@/src/utils/getDonatorSupportedAssociations";
 import { useEffect, useState } from "react";
 import Loader from "@/src/components/Loader";
-import StackTable from "@/src/components/dashDonnor/StackTable";
+import StackTable from "@/src/components/donor/StackTable";
 import { FrontAssociation } from "@/src/types/types";
 
 const ListStack = () => {

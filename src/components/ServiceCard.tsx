@@ -2,17 +2,14 @@ import { Img, Text, VStack } from "@chakra-ui/react";
 
 import colors from "@/src/theme/foundations/colors";
 
-const ServicesCard = ({
-	title,
-	description,
-	icon,
-	position,
-}: {
+type ServicesCardProps = {
 	title: string;
 	description: string;
 	icon: string;
 	position: "left" | "right";
-}) => (
+};
+
+const ServicesCard = ({ title, description, icon, position }: ServicesCardProps) => (
 	<VStack
 		bgGradient={`linear-gradient(135deg, ${position === "left" ? colors.blue[900] : colors.red[900]} 0%, ${
 			position === "left" ? colors.red[900] : colors.blue[900]

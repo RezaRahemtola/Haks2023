@@ -1,9 +1,10 @@
-import DashboardAssociation from "@/src/components/dashAsso/Dash";
-import DashboardDonnor from "@/src/components/dashDonnor/Dash";
-import Loader from "@/src/components/Loader";
-import { useDappContext } from "@/src/contexts/dapp";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+
+import DashboardAssociation from "@/src/components/association/Dashboard";
+import DashboardDonnor from "@/src/components/donor/Dashboard";
+import Loader from "@/src/components/Loader";
+import { useDappContext } from "@/src/contexts/dapp";
 
 const Dashboard = () => {
 	const { address, connected, storage } = useDappContext();

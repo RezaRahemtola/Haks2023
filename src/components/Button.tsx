@@ -1,30 +1,29 @@
-import { IconType } from 'react-icons';
-
-import { Button as ChakraButton, ButtonProps, Icon, useTheme, VStack } from '@chakra-ui/react';
+import { IconType } from "react-icons";
+import { Button as ChakraButton, ButtonProps, Icon, useTheme, VStack } from "@chakra-ui/react";
 
 type CustomButtonProps = {
-	buttonType?: 'no-icon' | 'left-icon' | 'right-icon';
+	buttonType?: "no-icon" | "left-icon" | "right-icon";
 	icon?: IconType;
 };
 
 const LeftIconButton = ({ children, icon, ...props }: ButtonProps & { icon: IconType }): JSX.Element => {
 	const theme = useTheme();
 
-	return props.variant === 'primary' ? (
+	return props.variant === "primary" ? (
 		<VStack
 			bg="blue.100"
 			_hover={{
 				/* eslint-disable-next-line no-underscore-dangle */
-				bg: theme.components.Button.variants[props.variant || 'secondary']._hover.background,
+				bg: theme.components.Button.variants[props.variant || "secondary"]._hover.background,
 			}}
-			borderRadius={theme.components.Button.sizes[(props.size as string) || 'md'].borderRadius}
+			borderRadius={theme.components.Button.sizes[(props.size as string) || "md"].borderRadius}
 			cursor="pointer"
 			justify="space-between"
 			sx={{
-				mozTransition: 'all .6s ease-in-out',
-				oTransition: 'all .6s ease-in-out',
-				webkitTransition: 'all .6s ease-in-out',
-				transition: 'all .6s ease-in-out',
+				mozTransition: "all .6s ease-in-out",
+				oTransition: "all .6s ease-in-out",
+				webkitTransition: "all .6s ease-in-out",
+				transition: "all .6s ease-in-out",
 			}}
 			w={props.w}
 		>
@@ -34,7 +33,7 @@ const LeftIconButton = ({ children, icon, ...props }: ButtonProps & { icon: Icon
 					mr="8px"
 					color="blue.1000"
 					_groupHover={{
-						color: 'blue.100',
+						color: "blue.100",
 					}}
 				/>
 				{children}
@@ -51,19 +50,19 @@ const LeftIconButton = ({ children, icon, ...props }: ButtonProps & { icon: Icon
 const RightIconButton = ({ children, icon, ...props }: ButtonProps & { icon: IconType }): JSX.Element => {
 	const theme = useTheme();
 
-	return props.variant === 'primary' ? (
+	return props.variant === "primary" ? (
 		<VStack
 			bg="blue.100"
 			_hover={{
 				/* eslint-disable-next-line no-underscore-dangle */
-				bg: theme.components.Button.variants[props.variant || 'secondary']._hover.background,
+				bg: theme.components.Button.variants[props.variant || "secondary"]._hover.background,
 			}}
-			borderRadius={theme.components.Button.sizes[(props.size as string) || 'md'].borderRadius}
+			borderRadius={theme.components.Button.sizes[(props.size as string) || "md"].borderRadius}
 			sx={{
-				mozTransition: 'all .6s ease-in-out',
-				oTransition: 'all .6s ease-in-out',
-				webkitTransition: 'all .6s ease-in-out',
-				transition: 'all .6s ease-in-out',
+				mozTransition: "all .6s ease-in-out",
+				oTransition: "all .6s ease-in-out",
+				webkitTransition: "all .6s ease-in-out",
+				transition: "all .6s ease-in-out",
 			}}
 			w={props.w}
 		>
@@ -74,9 +73,9 @@ const RightIconButton = ({ children, icon, ...props }: ButtonProps & { icon: Ico
 					ml="8px"
 					color="red.1000"
 					_groupHover={{
-						color: 'blue.100',
+						color: "blue.100",
 						_disabled: {
-							color: 'blue.100',
+							color: "blue.100",
 						},
 					}}
 				/>
@@ -93,19 +92,19 @@ const RightIconButton = ({ children, icon, ...props }: ButtonProps & { icon: Ico
 const NoIconButton = ({ children, ...props }: ButtonProps): JSX.Element => {
 	const theme = useTheme();
 
-	return props.variant === 'primary' ? (
+	return props.variant === "primary" ? (
 		<VStack
 			bg="blue.100"
 			_hover={{
 				/* eslint-disable-next-line no-underscore-dangle */
-				bg: theme.components.Button.variants[props.variant || 'secondary']._hover.background,
+				bg: theme.components.Button.variants[props.variant || "secondary"]._hover.background,
 			}}
-			borderRadius={theme.components.Button.sizes[(props.size as string) || 'md'].borderRadius}
+			borderRadius={theme.components.Button.sizes[(props.size as string) || "md"].borderRadius}
 			sx={{
-				mozTransition: 'all .6s ease-in-out',
-				oTransition: 'all .6s ease-in-out',
-				webkitTransition: 'all .6s ease-in-out',
-				transition: 'all .6s ease-in-out',
+				mozTransition: "all .6s ease-in-out",
+				oTransition: "all .6s ease-in-out",
+				webkitTransition: "all .6s ease-in-out",
+				transition: "all .6s ease-in-out",
 			}}
 			w={props.w}
 		>
@@ -116,11 +115,11 @@ const NoIconButton = ({ children, ...props }: ButtonProps): JSX.Element => {
 	);
 };
 
-const Button = ({ children, buttonType = 'no-icon', icon, ...props }: CustomButtonProps & ButtonProps): JSX.Element => {
-	if (buttonType === 'no-icon' || !icon) {
+const Button = ({ children, buttonType = "no-icon", icon, ...props }: CustomButtonProps & ButtonProps): JSX.Element => {
+	if (buttonType === "no-icon" || !icon) {
 		return <NoIconButton {...props}>{children}</NoIconButton>;
 	}
-	if (buttonType === 'left-icon') {
+	if (buttonType === "left-icon") {
 		return (
 			<LeftIconButton icon={icon} {...props}>
 				{children}

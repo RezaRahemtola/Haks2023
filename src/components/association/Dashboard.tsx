@@ -1,4 +1,4 @@
-import AmountWithdraw from "@/src/components/dashAsso/Amount";
+import AmountWithdraw from "@/src/components/association/Amount";
 import Footer from "@/src/components/landingPage/Footer";
 import NavBar from "@/src/components/NavBar";
 import { Box, Text, VStack } from "@chakra-ui/react";
