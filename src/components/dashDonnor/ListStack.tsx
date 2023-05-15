@@ -14,7 +14,7 @@ const ListStack = () => {
 		(async () => {
 			setValues(await getDonatorSupportedAssociations(storage, address, Tezos));
 		})();
-	}, []);
+	}, [storage, address, Tezos]);
 
 	return (
 		<>

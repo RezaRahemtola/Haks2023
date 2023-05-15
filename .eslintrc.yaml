@@ -17,7 +17,5 @@ extends:
 
 rules:
   no-plusplus: [ "error", { "allowForLoopAfterthoughts": true } ]
-  no-nested-ternary: off
+  no-console: [ "error", { allow: [ "error" ] } ]
   import/no-extraneous-dependencies: off
-  no-promise-executor-return: off
-  consistent-return: off

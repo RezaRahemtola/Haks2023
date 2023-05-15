@@ -14,7 +14,7 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import Button from "@/src/components/Button";
 import Modal from "@/src/components/Modal";
@@ -70,7 +70,7 @@ const HandleSupport = ({ association }: { association: FrontAssociation }) => {
 						p="10px"
 						my="4px"
 						placeholder="42"
-						onChange={(e: any) => setAmount(e.target.value)}
+						onChange={(e: ChangeEvent<HTMLInputElement>) => setAmount(parseInt(e.target.value, 10))}
 					/>
 				</FormControl>
 			</Modal>
@@ -79,7 +79,6 @@ const HandleSupport = ({ association }: { association: FrontAssociation }) => {
 };
 
 const HandleWithdraw = ({ association }: { association: FrontAssociation }) => {
-	const toast = useToast({ duration: 2000, isClosable: true });
 	const { Tezos } = useDappContext();
 	const router = useRouter();
 
@@ -94,6 +93,22 @@ const HandleWithdraw = ({ association }: { association: FrontAssociation }) => {
 			Withdraw
 		</Button>
 	);
+};
+
+type ActionHandlerProps = {
+	association: FrontAssociation;
+	isSupport?: boolean;
+	isWithdraw?: boolean;
+};
+
+const ActionHandler = ({ association, isSupport, isWithdraw }: ActionHandlerProps) => {
+	if (isSupport) {
+		return <HandleSupport association={association} />;
+	}
+	if (isWithdraw) {
+		return <HandleWithdraw association={association} />;
+	}
+	return <></>;
 };
 
 const Content = ({ values, isSupport, isWithdraw }: StackTableProps) => (
@@ -121,13 +136,7 @@ const Content = ({ values, isSupport, isWithdraw }: StackTableProps) => (
 								)}
 							</Td>
 							<Td isNumeric>
-								{isSupport ? (
-									<HandleSupport association={association} />
-								) : isWithdraw ? (
-									<HandleWithdraw association={association} />
-								) : (
-									<></>
-								)}
+								<ActionHandler association={association} isSupport={isSupport} isWithdraw={isWithdraw} />
 							</Td>
 						</Tr>
 					))}

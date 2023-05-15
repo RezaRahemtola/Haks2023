@@ -14,7 +14,7 @@ const ListAssociation = () => {
 		(async () => {
 			setValues(await getAssociations(storage, Tezos));
 		})();
-	}, []);
+	}, [storage, Tezos]);
 
 	return (
 		<>
