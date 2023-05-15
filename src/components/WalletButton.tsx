@@ -48,14 +48,12 @@ const ConnectButton = ({ setConnected, wallet, setUserAddress }: ButtonProps) =>
 
 	if (connected) {
 		return (
-			<>
-				<div>
-					<Button variant="secondary" buttonType="left-icon" icon={FaWallet} isTruncated>
-						{address.slice(0, 5)}..{address.substring(address.length - 3)}
-					</Button>
-					<Button variant="secondary" buttonType="left-icon" icon={IoMdLogOut} isTruncated onClick={disconnectWallet} />
-				</div>
-			</>
+			<div>
+				<Button variant="secondary" buttonType="left-icon" icon={FaWallet} isTruncated>
+					{address.slice(0, 5)}..{address.substring(address.length - 3)}
+				</Button>
+				<Button variant="secondary" buttonType="left-icon" icon={IoMdLogOut} isTruncated onClick={disconnectWallet} />
+			</div>
 		);
 	}
 	return (

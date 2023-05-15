@@ -1,13 +1,14 @@
 import { Box, Img, Stack, Text, useBreakpointValue, useColorMode, useColorModeValue, VStack } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { IoWalletOutline } from "react-icons/io5";
+import { ReactElement } from "react";
 
 import { textColorMode } from "@/src/config/colorMode";
 import colors from "@/src/theme/foundations/colors";
-import { useRouter } from "next/router";
-import { IoWalletOutline } from "react-icons/io5";
-import Button from "../Button";
-import ServicesCard from "../serviceCard";
+import Button from "@/src/components/Button";
+import ServicesCard from "@/src/components/ServiceCard";
 
-const ServicesSection = (): JSX.Element => {
+const ServicesSection = (): ReactElement => {
 	const isMobile: boolean = useBreakpointValue({ base: true, "2xl": false }) || false;
 
 	const textColor = useColorModeValue(textColorMode.light, textColorMode.dark);
@@ -47,8 +48,8 @@ const ServicesSection = (): JSX.Element => {
 						size={isMobile ? "xl" : "2xl"}
 						buttonType="left-icon"
 						icon={IoWalletOutline}
-						onClick={() => {
-							router.push("/dashboard");
+						onClick={async () => {
+							await router.push("/dashboard");
 						}}
 					>
 						Start as donor
@@ -66,8 +67,8 @@ const ServicesSection = (): JSX.Element => {
 						size={isMobile ? "xl" : "2xl"}
 						buttonType="left-icon"
 						icon={IoWalletOutline}
-						onClick={() => {
-							router.push("/register/charity");
+						onClick={async () => {
+							await router.push("/register/charity");
 						}}
 					>
 						Start as charity

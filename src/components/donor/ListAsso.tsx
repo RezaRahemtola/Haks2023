@@ -1,6 +1,6 @@
 import { Text } from "@chakra-ui/react";
 import { useDappContext } from "@/src/contexts/dapp";
-import StackTable from "@/src/components/dashDonnor/StackTable";
+import StackTable from "@/src/components/donor/StackTable";
 import getAssociations from "@/src/utils/getAssociations";
 import { useEffect, useState } from "react";
 import { FrontAssociation } from "@/src/types/types";

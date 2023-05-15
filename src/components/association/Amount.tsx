@@ -1,10 +1,11 @@
+import { Text, VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+
 import Button from "@/src/components/Button";
 import { useDappContext } from "@/src/contexts/dapp";
 import claimGifts from "@/src/utils/claimGifts";
 import convertTezosToUsd from "@/src/utils/convert";
 import getBalanceAssociation from "@/src/utils/getBalanceAssociation";
-import { Text, VStack } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 
 const AmountWithdraw = () => {
 	const { storage, Tezos, address } = useDappContext();
@@ -12,15 +13,13 @@ const AmountWithdraw = () => {
 	const [dollarValue, setDollarValue] = useState(0.0);
 
 	useEffect(() => {
-		const fetchData = async () => {
+		(async () => {
 			const fetchedValue = await getBalanceAssociation(storage, Tezos, address);
 			if (fetchedValue === undefined) return;
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			setValue(fetchedValue);
-		};
-
-		fetchData();
+		})();
 	}, [storage, Tezos, address]);
 
 	useEffect(() => {

@@ -1,6 +1,5 @@
 import { HStack, Text } from "@chakra-ui/react";
 import { usePathname, useRouter } from "next/navigation";
-
 import { IoRocketSharp } from "react-icons/io5";
 
 import Button from "@/src/components/Button";
@@ -13,38 +12,36 @@ const NavBar = () => {
 	const { wallet, setConnected, setAddress, connected } = useDappContext();
 
 	return (
-		<>
-			<HStack justify="space-between" w={{ base: "300px", lg: "750px", "2xl": "1000px" }}>
-				<Text
-					style={{ cursor: "pointer" }}
+		<HStack justify="space-between" w={{ base: "300px", lg: "750px", "2xl": "1000px" }}>
+			<Text
+				style={{ cursor: "pointer" }}
+				onClick={() => {
+					router.push("/");
+				}}
+				size="2xl"
+				variant="gradient"
+			>
+				Stake & Share
+			</Text>
+
+			{pathname === "/" && connected ? (
+				<Button
+					variant="special"
+					size="xl"
+					buttonType="left-icon"
+					icon={IoRocketSharp}
 					onClick={() => {
-						router.push("/");
+						router.push("/dashboard");
 					}}
-					size="2xl"
-					variant="gradient"
 				>
-					Stake & Share
-				</Text>
+					Start
+				</Button>
+			) : (
+				<></>
+			)}
 
-				{pathname === "/" && connected ? (
-					<Button
-						variant="special"
-						size="xl"
-						buttonType="left-icon"
-						icon={IoRocketSharp}
-						onClick={() => {
-							router.push("/dashboard");
-						}}
-					>
-						Start
-					</Button>
-				) : (
-					<></>
-				)}
-
-				<WalletButton wallet={wallet} setConnected={setConnected} setUserAddress={setAddress} />
-			</HStack>
-		</>
+			<WalletButton wallet={wallet} setConnected={setConnected} setUserAddress={setAddress} />
+		</HStack>
 	);
 };
 
